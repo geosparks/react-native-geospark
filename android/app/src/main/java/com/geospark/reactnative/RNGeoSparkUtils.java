@@ -6,6 +6,8 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
+import com.geospark.lib.model.GeoSparkGeofence;
+import com.geospark.lib.model.GeoSparkTrips;
 import com.geospark.lib.model.GeoSparkUser;
 
 import java.util.ArrayList;
@@ -19,13 +21,6 @@ public class RNGeoSparkUtils {
             return "GRANTED";
         }
         return "DENIED";
-    }
-
-    static String checkPlayServices(boolean hasGranted) {
-        if (hasGranted) {
-            return "YES";
-        }
-        return "NO";
     }
 
     static String checkLocationServices(boolean hasGranted) {
@@ -43,6 +38,42 @@ public class RNGeoSparkUtils {
         map.putDouble("latitude", location.getLatitude());
         map.putDouble("longitude", location.getLongitude());
         map.putDouble("accuracy", location.getAccuracy());
+        map.putDouble("altitude", location.getAltitude());
+        map.putDouble("speed", location.getSpeed());
+        return map;
+    }
+
+    static WritableMap mapForGeofenceList(List<GeoSparkGeofence> geofences) {
+        if (geofences == null && geofences.size() == 0) {
+            return null;
+        }
+        WritableMap map = Arguments.createMap();
+        for (int i = 0; i < geofences.size(); i++) {
+            WritableMap mapData = Arguments.createMap();
+            GeoSparkGeofence geoSparkGeofence = geofences.get(i);
+            mapData.putString("geofenceId", geoSparkGeofence.getId());
+            mapData.putString("createdAt", geoSparkGeofence.getCreatedAt());
+            mapData.putString("expireAt", geoSparkGeofence.getExpiresAt());
+            mapData.putInt("radius", geoSparkGeofence.getRadius());
+            mapData.putDouble("latitude", geoSparkGeofence.getCoordinates().get(0));
+            mapData.putDouble("longitude", geoSparkGeofence.getCoordinates().get(1));
+            map.putMap(String.valueOf(i), mapData);
+        }
+        return map;
+    }
+
+    static WritableMap mapForTripList(List<GeoSparkTrips> trips) {
+        if (trips == null && trips.size() == 0) {
+            return null;
+        }
+        WritableMap map = Arguments.createMap();
+        for (int i = 0; i < trips.size(); i++) {
+            WritableMap mapData = Arguments.createMap();
+            GeoSparkTrips geoSparkTrips = trips.get(i);
+            mapData.putString("trips", geoSparkTrips.getTripId());
+            mapData.putString("startedAt", geoSparkTrips.getTripStartedAt());
+            map.putMap(String.valueOf(i), mapData);
+        }
         return map;
     }
 
@@ -51,7 +82,7 @@ public class RNGeoSparkUtils {
             return null;
         }
         WritableMap map = Arguments.createMap();
-        map.putString("userId", geoSparkUser.getmUserID());
+        map.putString("userId", geoSparkUser.getUserId());
         return map;
     }
 
@@ -63,10 +94,6 @@ public class RNGeoSparkUtils {
         return readableArray != null && readableArray.size() > 0;
     }
 
-    static boolean isStringNotNull(String type) {
-        return type != null && type.trim().length() > 0;
-    }
-
     static GeoSpark.Type[] arrayToEnum(ReadableArray readableArray) {
         List<GeoSpark.Type> types = new ArrayList<>();
         for (int i = 0; i < readableArray.size(); i++) {
@@ -74,18 +101,4 @@ public class RNGeoSparkUtils {
         }
         return types.toArray(new GeoSpark.Type[types.size()]);
     }
-
-    static boolean isLocationSettings(GeoSpark.Type types) {
-        return types.equals(GeoSpark.Type.HIGH) ||
-                types.equals(GeoSpark.Type.MEDIUM) ||
-                types.equals(GeoSpark.Type.LOW) ||
-                types.equals(GeoSpark.Type.OPTIMISED);
-    }
-
-    static boolean isModeSettings(GeoSpark.Type types) {
-        return types.equals(GeoSpark.Type.HIGH_ACCURACY) ||
-                types.equals(GeoSpark.Type.BALANCED_POWER_ACCURACY) ||
-                types.equals(GeoSpark.Type.LOW_POWER);
-    }
-
 }
