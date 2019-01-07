@@ -51,7 +51,7 @@ public class RNGeoSparkUtils {
             return null;
         }
         WritableMap map = Arguments.createMap();
-        map.putString("userID", geoSparkUser.getmUserID());
+        map.putString("userId", geoSparkUser.getmUserID());
         return map;
     }
 
