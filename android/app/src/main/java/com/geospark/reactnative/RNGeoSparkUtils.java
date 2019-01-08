@@ -71,8 +71,8 @@ public class RNGeoSparkUtils {
         for (int i = 0; i < trips.size(); i++) {
             WritableMap mapData = Arguments.createMap();
             GeoSparkTrips geoSparkTrips = trips.get(i);
-            mapData.putString("trips", geoSparkTrips.getTripId());
-            mapData.putString("startedAt", geoSparkTrips.getTripStartedAt());
+            mapData.putString("tripId", geoSparkTrips.getTripId());
+            mapData.putString("tripStartedAt", geoSparkTrips.getTripStartedAt());
             map.putMap(String.valueOf(i), mapData);
         }
         return map;
