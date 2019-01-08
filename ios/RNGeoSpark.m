@@ -83,12 +83,14 @@ RCT_EXPORT_METHOD(checkMotionPermission :(RCTPromiseResolveBlock)callback){
 
 
 RCT_EXPORT_METHOD(startTrip:(NSString *)tripDescription :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  [GeoSpark startTrip:tripDescription :^(GeoSparkTrip * trip) {
-    NSMutableArray *dict = [[NSMutableArray alloc] initWithObjects:trip.tripId, nil];
-    successCallback(dict);
-  } onFailure:^(GeoSparkError * error) {
-    errorCallback([self error:error]);
-  }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [GeoSpark startTrip:tripDescription :^(GeoSparkTrip * trip) {
+            NSMutableArray *dict = [[NSMutableArray alloc] initWithObjects:trip.tripId, nil];
+            successCallback(dict);
+        } onFailure:^(GeoSparkError * error) {
+            errorCallback([self error:error]);
+        }];
+    });
 }
 RCT_EXPORT_METHOD(endTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
   [GeoSpark endTrip:tripId :^(GeoSparkTrip * trip) {
@@ -101,7 +103,11 @@ RCT_EXPORT_METHOD(endTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCal
 
 RCT_EXPORT_METHOD(activeTrips :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
   [GeoSpark activeTrips:^(GeoSparkTrips * trips) {
-    NSMutableArray *dict = [[NSMutableArray alloc] initWithObjects:trips, nil];
+      NSMutableArray *dict = [[NSMutableArray alloc] init];
+      for (int i = 0; i < [trips.data count]; i++)
+      {
+          [dict addObject:[trips.data objectAtIndex:i].tripId];
+      }
     successCallback(dict);
   } onFailure:^(GeoSparkError * error) {
     errorCallback([self error:error]);
@@ -128,7 +134,11 @@ RCT_EXPORT_METHOD(deleteGeofence:(NSString *)geofenceId :(RCTResponseSenderBlock
 
 RCT_EXPORT_METHOD(geofenceList:(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
   [GeoSpark geofenceList:^(GeoSparkGeofenceList * list) {
-    NSMutableArray *dict = [[NSMutableArray alloc] initWithObjects:list, nil];
+      NSMutableArray *dict = [[NSMutableArray alloc] init];
+      for (int i = 0; i < [list.data count]; i++)
+      {
+          [dict addObject:[list.data objectAtIndex:i].geofenceId];
+      }
     successCallback(dict);
   } onFailure:^(GeoSparkError * error) {
     errorCallback([self error:error]);
