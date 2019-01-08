@@ -67,16 +67,16 @@ RCT_EXPORT_METHOD(requestMotionPermission){
   [GeoSpark requestMotion];
 }
 
-RCT_EXPORT_METHOD(requestLoctionPermission){
+RCT_EXPORT_METHOD(requestLocationPermission){
   [GeoSpark requestLocation];
 }
 
-RCT_EXPORT_METHOD(isLocationEnabled :(RCTPromiseResolveBlock)callback){
+RCT_EXPORT_METHOD(checkLocationPermission :(RCTPromiseResolveBlock)callback){
   NSString *str = [self checkPermission:[GeoSpark isLocationEnabled]];
   callback(str);
 }
 
-RCT_EXPORT_METHOD(isMotionEnabled :(RCTPromiseResolveBlock)callback){
+RCT_EXPORT_METHOD(checkMotionPermission :(RCTPromiseResolveBlock)callback){
   NSString *str = [self checkPermission:[GeoSpark isMotionEnabled]];
   callback(str);
 }
@@ -135,11 +135,11 @@ RCT_EXPORT_METHOD(geofenceList:(RCTResponseSenderBlock)successCallback rejecter:
   }];
 }
 
-RCT_EXPORT_METHOD(startLocationTracking){
+RCT_EXPORT_METHOD(startTracking){
   [GeoSpark startTracking];
 }
 
-RCT_EXPORT_METHOD(stopLocationTracking){
+RCT_EXPORT_METHOD(stopTracking){
   [GeoSpark stopTracking];
 }
 
