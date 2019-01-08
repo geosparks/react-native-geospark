@@ -6,6 +6,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
+import com.geospark.lib.model.GeoSparkError;
 import com.geospark.lib.model.GeoSparkGeofence;
 import com.geospark.lib.model.GeoSparkTrips;
 import com.geospark.lib.model.GeoSparkUser;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class RNGeoSparkUtils {
 
-    static String checkPermissionStatus(boolean hasGranted) {
+    static String checkLocationPermission(boolean hasGranted) {
         if (hasGranted) {
             return "GRANTED";
         }
@@ -83,6 +84,13 @@ public class RNGeoSparkUtils {
         }
         WritableMap map = Arguments.createMap();
         map.putString("userId", geoSparkUser.getUserId());
+        return map;
+    }
+
+    static WritableMap mapForError(GeoSparkError geoSparkError) {
+        WritableMap map = Arguments.createMap();
+        map.putString("errorCode", geoSparkError.getErrorCode());
+        map.putString("errorMessage", geoSparkError.getErrorMessage());
         return map;
     }
 

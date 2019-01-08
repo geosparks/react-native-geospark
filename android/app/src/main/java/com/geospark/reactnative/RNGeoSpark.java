@@ -28,7 +28,6 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     public RNGeoSpark(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
-
     }
 
     @Override
@@ -37,8 +36,8 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void checkPermission(Callback callback) {
-        callback.invoke(RNGeoSparkUtils.checkPermissionStatus(GeoSpark.checkPermission(reactContext)));
+    public void checkLocationPermission(Callback callback) {
+        callback.invoke(RNGeoSparkUtils.checkLocationPermission(GeoSpark.checkPermission(reactContext)));
     }
 
     @ReactMethod
@@ -47,7 +46,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void requestPermission() {
+    public void requestLocationPermission() {
         Activity activity = getCurrentActivity();
         if (activity != null) {
             GeoSpark.requestPermission(activity);
@@ -74,10 +73,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
             @Override
             public void onFailure(GeoSparkError geoSparkError) {
-                WritableMap map = Arguments.createMap();
-                map.putString("errorCode", geoSparkError.getErrorCode());
-                map.putString("errorMessage", geoSparkError.getErrorMessage());
-                errorCallback.invoke(map);
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
             }
         });
     }
@@ -94,10 +90,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
             @Override
             public void onFailure(GeoSparkError geoSparkError) {
-                WritableMap map = Arguments.createMap();
-                map.putString("errorCode", geoSparkError.getErrorCode());
-                map.putString("errorMessage", geoSparkError.getErrorMessage());
-                errorCallback.invoke(map);
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
             }
         });
     }
@@ -114,10 +107,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
             @Override
             public void onFailure(GeoSparkError geoSparkError) {
-                WritableMap map = Arguments.createMap();
-                map.putString("errorCode", geoSparkError.getErrorCode());
-                map.putString("errorMessage", geoSparkError.getErrorMessage());
-                errorCallback.invoke(map);
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
             }
         });
     }
@@ -135,10 +125,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
             @Override
             public void onFailure(GeoSparkError geoSparkError) {
-                WritableMap map = Arguments.createMap();
-                map.putString("errorCode", geoSparkError.getErrorCode());
-                map.putString("errorMessage", geoSparkError.getErrorMessage());
-                errorCallback.invoke(map);
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
             }
         });
     }
@@ -156,10 +143,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
             @Override
             public void onFailure(GeoSparkError geoSparkError) {
-                WritableMap map = Arguments.createMap();
-                map.putString("errorCode", geoSparkError.getErrorCode());
-                map.putString("errorMessage", geoSparkError.getErrorMessage());
-                errorCallback.invoke(map);
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
             }
         });
     }
@@ -176,10 +160,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
             @Override
             public void onFailure(GeoSparkError geoSparkError) {
-                WritableMap map = Arguments.createMap();
-                map.putString("errorCode", geoSparkError.getErrorCode());
-                map.putString("errorMessage", geoSparkError.getErrorMessage());
-                errorCallback.invoke(map);
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
             }
         });
     }
@@ -201,10 +182,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
             @Override
             public void onFailure(GeoSparkError geoSparkError) {
-                WritableMap map = Arguments.createMap();
-                map.putString("errorCode", geoSparkError.getErrorCode());
-                map.putString("errorMessage", geoSparkError.getErrorMessage());
-                errorCallback.invoke(map);
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
             }
         });
     }
@@ -222,10 +200,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
             @Override
             public void onFailure(GeoSparkError geoSparkError) {
-                WritableMap map = Arguments.createMap();
-                map.putString("errorCode", geoSparkError.getErrorCode());
-                map.putString("errorMessage", geoSparkError.getErrorMessage());
-                errorCallback.invoke(map);
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
             }
         });
     }
@@ -242,10 +217,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
             @Override
             public void onFailure(GeoSparkError geoSparkError) {
-                WritableMap map = Arguments.createMap();
-                map.putString("errorCode", geoSparkError.getErrorCode());
-                map.putString("errorMessage", geoSparkError.getErrorMessage());
-                errorCallback.invoke(map);
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
             }
         });
     }
@@ -272,10 +244,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
             @Override
             public void onFailure(GeoSparkError geoSparkError) {
-                WritableMap map = Arguments.createMap();
-                map.putString("errorCode", geoSparkError.getErrorCode());
-                map.putString("errorMessage", geoSparkError.getErrorMessage());
-                errorCallback.invoke(map);
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
             }
         });
     }

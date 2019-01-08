@@ -30,16 +30,24 @@ const IOSType = {
  AlwaysOn: 'GSAlwaysOn'
 }
 
-const checkPermission = (callback) => {
-  NativeModules.RNGeoSpark.checkPermission(callback);
+const checkLocationPermission = (callback) => {
+  NativeModules.RNGeoSpark.checkLocationPermission(callback);
 };
 
 const checkLocationServices = (callback) => {
   NativeModules.RNGeoSpark.checkLocationServices(callback);
 };
 
-const requestPermission = () => {
-  NativeModules.RNGeoSpark.requestPermission();
+const checkMotionServices = (callback) => {
+  NativeModules.RNGeoSpark.checkMotionServices(callback);
+};
+
+const requestMotionPermission = () => {
+  NativeModules.RNGeoSpark.requestMotionPermission();
+};
+
+const requestLocationPermission = () => {
+  NativeModules.RNGeoSpark.requestLocationPermission();
 };
 
 const requestLocationServices = () => {
@@ -117,9 +125,11 @@ const stopListener = (event, callback) => {
 const GeoSpark = {
  Type,
  IOSType,
- checkPermission,
+ checkMotionPermission,
+ checkLocationPermission,
  checkLocationServices,
- requestPermission,
+ requestMotionPermission
+ requestLocationPermission,
  requestLocationServices,
  createUser,
  getUser,
