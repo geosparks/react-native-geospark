@@ -11,9 +11,16 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
-import com.geospark.lib.callback.ErrorResponse;
 import com.geospark.lib.callback.GeoSparkCallBack;
-import com.geospark.lib.callback.SuccessResponse;
+import com.geospark.lib.callback.GeoSparkGeofenceCallBack;
+import com.geospark.lib.callback.GeoSparkLogoutCallBack;
+import com.geospark.lib.callback.GeoSparkTripCallBack;
+import com.geospark.lib.callback.GeoSparkTripsCallBack;
+import com.geospark.lib.model.GeoSparkError;
+import com.geospark.lib.model.GeoSparkGeofence;
+import com.geospark.lib.model.GeoSparkTrip;
+import com.geospark.lib.model.GeoSparkTrips;
+import com.geospark.lib.model.GeoSparkUser;
 
 public class RNGeoSpark extends ReactContextBaseJavaModule {
     ReactApplicationContext reactContext;
@@ -21,7 +28,6 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     public RNGeoSpark(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
-
     }
 
     @Override
@@ -30,13 +36,8 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void checkGooglePlayService(Callback callback) {
-        callback.invoke(RNGeoSparkUtils.checkPlayServices(GeoSpark.checkGooglePlayService(reactContext)));
-    }
-
-    @ReactMethod
-    public void checkPermission(Callback callback) {
-        callback.invoke(RNGeoSparkUtils.checkPermissionStatus(GeoSpark.checkPermission(reactContext)));
+    public void checkLocationPermission(Callback callback) {
+        callback.invoke(RNGeoSparkUtils.checkLocationPermission(GeoSpark.checkPermission(reactContext)));
     }
 
     @ReactMethod
@@ -45,7 +46,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void requestPermission() {
+    public void requestLocationPermission() {
         Activity activity = getCurrentActivity();
         if (activity != null) {
             GeoSpark.requestPermission(activity);
@@ -61,62 +62,191 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void createUser(final Callback successCallback, final Callback errorCallback) {
-        GeoSpark.createUser(reactContext, new GeoSparkCallBack() {
+    public void createUser(String description, final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.createUser(reactContext, description, new GeoSparkCallBack() {
             @Override
-            public void success(SuccessResponse successResponse) {
+            public void onSuccess(GeoSparkUser geoSparkUser) {
                 WritableMap map = Arguments.createMap();
-                map.putString("userid", successResponse.getUserID());
+                map.putString("userId", geoSparkUser.getUserId());
                 successCallback.invoke(map);
             }
 
             @Override
-            public void failure(ErrorResponse errorResponse) {
-                errorCallback.invoke(errorResponse.getErrorMessage());
+            public void onFailure(GeoSparkError geoSparkError) {
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
             }
         });
     }
 
     @ReactMethod
-    public void getUser(String userID, final Callback successCallback, final Callback errorCallback) {
-        GeoSpark.getUser(reactContext, userID, new GeoSparkCallBack() {
+    public void getUser(String userId, final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.getUser(reactContext, userId, new GeoSparkCallBack() {
             @Override
-            public void success(SuccessResponse successResponse) {
+            public void onSuccess(GeoSparkUser geoSparkUser) {
                 WritableMap map = Arguments.createMap();
-                map.putString("userid", successResponse.getUserID());
+                map.putString("userId", geoSparkUser.getUserId());
                 successCallback.invoke(map);
             }
 
             @Override
-            public void failure(ErrorResponse errorResponse) {
-                errorCallback.invoke(errorResponse.getErrorMessage());
+            public void onFailure(GeoSparkError geoSparkError) {
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
             }
         });
     }
 
     @ReactMethod
-    public void setDescription(String description) {
-        GeoSpark.setDescription(reactContext, description);
+    public void setDescription(String description, final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.setDescription(reactContext, description, new GeoSparkCallBack() {
+            @Override
+            public void onSuccess(GeoSparkUser geoSparkUser) {
+                WritableMap map = Arguments.createMap();
+                map.putString("userId", geoSparkUser.getUserId());
+                successCallback.invoke(map);
+            }
+
+            @Override
+            public void onFailure(GeoSparkError geoSparkError) {
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
+            }
+        });
     }
 
     @ReactMethod
-    public void startLocationTracking() {
-        GeoSpark.startLocationTracking(reactContext);
+    public void startTrip(String description, final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.startTrip(reactContext, description, new GeoSparkTripCallBack() {
+            @Override
+            public void onSuccess(GeoSparkTrip geoSparkTrip) {
+                WritableMap map = Arguments.createMap();
+                map.putString("tripId", geoSparkTrip.getTripId());
+                map.putString("tripStartedAt", geoSparkTrip.getTripStartedAt());
+                successCallback.invoke(map);
+            }
+
+            @Override
+            public void onFailure(GeoSparkError geoSparkError) {
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
+            }
+        });
     }
 
     @ReactMethod
-    public void stopLocationTracking() {
-        GeoSpark.stopLocationTracking(reactContext);
+    public void endTrip(String tripId, final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.endTrip(reactContext, tripId, new GeoSparkTripCallBack() {
+            @Override
+            public void onSuccess(GeoSparkTrip geoSparkTrip) {
+                WritableMap map = Arguments.createMap();
+                map.putString("tripId", geoSparkTrip.getTripId());
+                map.putString("tripEndedAt", geoSparkTrip.getTripEndedAt());
+                successCallback.invoke(map);
+            }
+
+            @Override
+            public void onFailure(GeoSparkError geoSparkError) {
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
+            }
+        });
     }
 
     @ReactMethod
-    public void startMockLocationTracking() {
-        GeoSpark.startMockLocationTracking(reactContext);
+    public void activeTrips(final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.activeTrips(reactContext, new GeoSparkTripsCallBack() {
+            @Override
+            public void onSuccess(GeoSparkTrips geoSparkTrips) {
+                WritableMap map = Arguments.createMap();
+                map.putMap("activeTrips", RNGeoSparkUtils.mapForTripList(geoSparkTrips.getTripsId()));
+                successCallback.invoke(map);
+            }
+
+            @Override
+            public void onFailure(GeoSparkError geoSparkError) {
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
+            }
+        });
     }
 
     @ReactMethod
-    public void stopMockLocationTracking() {
-        GeoSpark.stopMockLocationTracking(reactContext);
+    public void createGeofence(double latitude, double longitude, int radius, int expireInSeconds, final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.createGeofence(reactContext, latitude, longitude, radius, expireInSeconds, new GeoSparkGeofenceCallBack() {
+            @Override
+            public void onSuccess(GeoSparkGeofence geoSparkGeofence) {
+                WritableMap map = Arguments.createMap();
+                map.putString("geofenceId", geoSparkGeofence.getId());
+                map.putString("createdAt", geoSparkGeofence.getCreatedAt());
+                map.putString("expireAt", geoSparkGeofence.getExpiresAt());
+                map.putDouble("latitude", geoSparkGeofence.getCoordinates().get(0));
+                map.putDouble("longitude", geoSparkGeofence.getCoordinates().get(1));
+                map.putInt("radius", geoSparkGeofence.getRadius());
+                successCallback.invoke(map);
+            }
+
+            @Override
+            public void onFailure(GeoSparkError geoSparkError) {
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
+            }
+        });
+    }
+
+    @ReactMethod
+    public void deleteGeofence(String geofenceId, final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.deleteGeofence(reactContext, geofenceId, new GeoSparkGeofenceCallBack() {
+            @Override
+            public void onSuccess(GeoSparkGeofence geoSparkGeofence) {
+                WritableMap map = Arguments.createMap();
+                map.putString("geofenceId", geoSparkGeofence.getId());
+                map.putString("message", geoSparkGeofence.getMessage());
+                successCallback.invoke(map);
+            }
+
+            @Override
+            public void onFailure(GeoSparkError geoSparkError) {
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
+            }
+        });
+    }
+
+    @ReactMethod
+    public void geofenceList(final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.geofenceList(reactContext, new GeoSparkGeofenceCallBack() {
+            @Override
+            public void onSuccess(GeoSparkGeofence geoSparkGeofence) {
+                WritableMap map = Arguments.createMap();
+                map.putMap("geofenceList", RNGeoSparkUtils.mapForGeofenceList(geoSparkGeofence.getGeofenceList()));
+                successCallback.invoke(map);
+            }
+
+            @Override
+            public void onFailure(GeoSparkError geoSparkError) {
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
+            }
+        });
+    }
+
+    @ReactMethod
+    public void startTracking() {
+        GeoSpark.startTracking(reactContext);
+    }
+
+    @ReactMethod
+    public void stopTracking() {
+        GeoSpark.stopTracking(reactContext);
+    }
+
+    @ReactMethod
+    public void logout(final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.logout(reactContext, new GeoSparkLogoutCallBack() {
+            @Override
+            public void onSuccess(String message) {
+                WritableMap map = Arguments.createMap();
+                map.putString("message", message);
+                successCallback.invoke(map);
+            }
+
+            @Override
+            public void onFailure(GeoSparkError geoSparkError) {
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
+            }
+        });
     }
 
     @ReactMethod
@@ -125,7 +255,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
             if (RNGeoSparkUtils.isArrayNotNull(readableArray)) {
                 GeoSpark.setTrackingInAppState(reactContext, RNGeoSparkUtils.arrayToEnum(readableArray));
             } else {
-                Log.e("GeoSpark TrackingState", RNGeoSparkConstants.INVALID_SETTINGS);
+                Log.e(RNGeoSparkConstants.TAG, RNGeoSparkConstants.APPSTATE_SETTINGS);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,64 +268,10 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
             if (RNGeoSparkUtils.isArrayNotNull(readableArray)) {
                 GeoSpark.setTrackingInMotion(reactContext, RNGeoSparkUtils.arrayToEnum(readableArray));
             } else {
-                Log.e("GeoSpark TrackingMotion", RNGeoSparkConstants.INVALID_SETTINGS);
+                Log.e(RNGeoSparkConstants.TAG, RNGeoSparkConstants.MOTION_SETTINGS);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    @ReactMethod
-    public void setLocationMode(String type) {
-        try {
-            if (RNGeoSparkUtils.isStringNotNull(type) && RNGeoSparkUtils.isModeSettings(RNGeoSparkUtils.stringToEnum(type))) {
-                GeoSpark.setLocationMode(reactContext, RNGeoSparkUtils.stringToEnum(type));
-            } else {
-                Log.e("GeoSpark LocationMode", RNGeoSparkConstants.INVALID_SETTINGS);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @ReactMethod
-    public void setLocationFrequency(String type) {
-        try {
-            if (RNGeoSparkUtils.isStringNotNull(type) && RNGeoSparkUtils.isLocationSettings(RNGeoSparkUtils.stringToEnum(type))) {
-                GeoSpark.setLocationFrequency(reactContext, RNGeoSparkUtils.stringToEnum(type));
-            } else {
-                Log.e("GeoSpark Frequency", RNGeoSparkConstants.INVALID_SETTINGS);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @ReactMethod
-    public void setLocationAccuracy(String type) {
-        try {
-            if (RNGeoSparkUtils.isStringNotNull(type) && RNGeoSparkUtils.isLocationSettings(RNGeoSparkUtils.stringToEnum(type))) {
-                GeoSpark.setLocationAccuracy(reactContext, RNGeoSparkUtils.stringToEnum(type));
-            } else {
-                Log.e("GeoSpark Accuracy", RNGeoSparkConstants.INVALID_SETTINGS);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @ReactMethod
-    public void setDistanceFilter(String type) {
-        try {
-            if (RNGeoSparkUtils.isStringNotNull(type) && RNGeoSparkUtils.isLocationSettings(RNGeoSparkUtils.stringToEnum(type))) {
-                GeoSpark.setDistanceFilter(reactContext, RNGeoSparkUtils.stringToEnum(type));
-            } else {
-                Log.e("GeoSpark DistanceFilter", RNGeoSparkConstants.INVALID_SETTINGS);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }

@@ -10,8 +10,9 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.geospark.lib.location.services.GeoSparkReceiver;
 import com.geospark.lib.model.GeoSparkUser;
-import com.geospark.lib.services.receiver.GeoSparkReceiver;
+
 
 public class RNGeoSparkReceiver extends GeoSparkReceiver {
     private ReactNativeHost mReactNativeHost;
@@ -40,13 +41,13 @@ public class RNGeoSparkReceiver extends GeoSparkReceiver {
     }
 
     @Override
-    public void onLocationUpdated(Context context, Location location, GeoSparkUser geoSparkUser) {
+    public void onLocationUpdated(Context context, Location location, GeoSparkUser geoSparkUser, String activity) {
         ReactApplication reactApplication = (ReactApplication) context.getApplicationContext();
         mReactNativeHost = reactApplication.getReactNativeHost();
         WritableMap map = Arguments.createMap();
         map.putMap("location", RNGeoSparkUtils.mapForLocation(location));
         map.putMap("user", RNGeoSparkUtils.mapForUser(geoSparkUser));
+        map.putString("activity", activity);
         sendEvent("location", map);
     }
-
 }
