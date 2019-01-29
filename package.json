@@ -11,10 +11,10 @@
     "react-native": ">= 0.40.0"
   },
   "bugs": {
-    "url": "https://github.com/geosparklabs/react-native-geospark/issues"
+    "url": "https://github.com/geosparks/react-native-geospark/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/geosparklabs/react-native-geospark"
+    "url": "https://github.com/geosparks/react-native-geospark"
   }
 }
