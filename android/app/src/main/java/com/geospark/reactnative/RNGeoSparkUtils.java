@@ -55,7 +55,6 @@ public class RNGeoSparkUtils {
             mapData.putString("geofenceId", geoSparkGeofence.getId());
             mapData.putString("createdAt", geoSparkGeofence.getCreatedAt());
             mapData.putString("expireAt", geoSparkGeofence.getExpiresAt());
-            mapData.putInt("radius", geoSparkGeofence.getRadius());
             mapData.putDouble("latitude", geoSparkGeofence.getCoordinates().get(0));
             mapData.putDouble("longitude", geoSparkGeofence.getCoordinates().get(1));
             map.putMap(String.valueOf(i), mapData);
