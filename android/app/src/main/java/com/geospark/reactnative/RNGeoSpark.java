@@ -13,7 +13,6 @@ import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
 import com.geospark.lib.callback.GeoSparkCallBack;
 import com.geospark.lib.callback.GeoSparkGeofenceCallBack;
-import com.geospark.lib.callback.GeoSparkLocationCallback;
 import com.geospark.lib.callback.GeoSparkLogoutCallBack;
 import com.geospark.lib.callback.GeoSparkTripCallBack;
 import com.geospark.lib.callback.GeoSparkTripsCallBack;
@@ -229,25 +228,6 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     @ReactMethod
     public void stopTracking() {
         GeoSpark.stopTracking(reactContext);
-    }
-
-    @ReactMethod
-    public void getCurrentLocation(GeoSpark.Type type, int accuracy, final Callback successCallback, final Callback errorCallback) {
-        GeoSpark.getCurrentLocation(reactContext, type, accuracy, new GeoSparkLocationCallback() {
-            @Override
-            public void location(double latitude, double longitude, double accuracy) {
-                WritableMap map = Arguments.createMap();
-                map.putDouble("latitude", latitude);
-                map.putDouble("longitude", longitude);
-                map.putDouble("accuracy", accuracy);
-                successCallback.invoke(map);
-            }
-
-            @Override
-            public void onFailure(GeoSparkError geoSparkError) {
-                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
-            }
-        });
     }
 
     @ReactMethod
