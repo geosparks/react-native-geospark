@@ -37,7 +37,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void checkLocationPermission(Callback callback) {
-        callback.invoke(RNGeoSparkUtils.checkLocationPermission(GeoSpark.checkPermission(reactContext)));
+        callback.invoke(RNGeoSparkUtils.checkLocationPermission(GeoSpark.checkLocationPermission(reactContext)));
     }
 
     @ReactMethod
@@ -49,7 +49,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     public void requestLocationPermission() {
         Activity activity = getCurrentActivity();
         if (activity != null) {
-            GeoSpark.requestPermission(activity);
+            GeoSpark.requestLocationPermission(activity);
         }
     }
 
@@ -176,7 +176,6 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
                 map.putString("expireAt", geoSparkGeofence.getExpiresAt());
                 map.putDouble("latitude", geoSparkGeofence.getCoordinates().get(0));
                 map.putDouble("longitude", geoSparkGeofence.getCoordinates().get(1));
-                map.putInt("radius", geoSparkGeofence.getRadius());
                 successCallback.invoke(map);
             }
 
@@ -193,7 +192,6 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
             @Override
             public void onSuccess(GeoSparkGeofence geoSparkGeofence) {
                 WritableMap map = Arguments.createMap();
-                map.putString("geofenceId", geoSparkGeofence.getId());
                 map.putString("message", geoSparkGeofence.getMessage());
                 successCallback.invoke(map);
             }
