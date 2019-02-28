@@ -54,6 +54,18 @@ const requestLocationServices = () => {
   NativeModules.RNGeoSpark.requestLocationServices();
 };
 
+const disableBatteryOptimization = () => {
+  NativeModules.RNGeoSpark.disableBatteryOptimization();
+};
+
+const isBatteryOptimizationEnabled = (callback) => {
+  NativeModules.RNGeoSpark.isBatteryOptimizationEnabled(callback);
+};
+
+const isMockEnabledInDevice = (callback) => {
+  NativeModules.RNGeoSpark.isMockEnabledInDevice(callback);
+};
+
 const createUser = (description,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.createUser(description,successCallback,errorCallback);
 };
@@ -131,6 +143,9 @@ const GeoSpark = {
  requestMotionPermission,
  requestLocationPermission,
  requestLocationServices,
+ disableBatteryOptimization,
+ isBatteryOptimizationEnabled,
+ isMockEnabledInDevice,
  createUser,
  getUser,
  setDescription,
