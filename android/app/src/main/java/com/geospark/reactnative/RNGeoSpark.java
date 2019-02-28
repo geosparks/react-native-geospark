@@ -42,7 +42,22 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void checkLocationServices(Callback callback) {
-        callback.invoke(RNGeoSparkUtils.checkLocationServices(GeoSpark.checkLocationServices(reactContext)));
+        callback.invoke(RNGeoSparkUtils.checkEnabled(GeoSpark.checkLocationServices(reactContext)));
+    }
+
+    @ReactMethod
+    public void disableBatteryOptimization() {
+        GeoSpark.disableBatteryOptimization(reactContext);
+    }
+
+    @ReactMethod
+    public void isBatteryOptimizationEnabled(Callback callback) {
+        callback.invoke(RNGeoSparkUtils.checkEnabled(GeoSpark.isBatteryOptimizationEnabled(reactContext)));
+    }
+
+    @ReactMethod
+    public void isMockEnabledInDevice(Callback callback) {
+        callback.invoke(RNGeoSparkUtils.checkEnabled(GeoSpark.isMockEnabledInDevice(reactContext)));
     }
 
     @ReactMethod

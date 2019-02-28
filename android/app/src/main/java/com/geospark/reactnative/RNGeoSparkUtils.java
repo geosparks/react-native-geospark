@@ -24,8 +24,8 @@ public class RNGeoSparkUtils {
         return "DENIED";
     }
 
-    static String checkLocationServices(boolean hasGranted) {
-        if (hasGranted) {
+    static String checkEnabled(boolean hasEnabled) {
+        if (hasEnabled) {
             return "ENABLED";
         }
         return "DISABLED";
