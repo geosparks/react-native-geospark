@@ -16,8 +16,6 @@ const Type = {
  FOREGROUND : 'FOREGROUND',
  BACKGROUND : 'BACKGROUND',
  ALWAYS_ON : 'ALWAYS_ON',
- GPS:'GPS' 
- GPS_NETWORK:'GPS_NETWORK'
 }
 
 const IOSType = {
@@ -112,16 +110,6 @@ const stopTracking = () => {
   NativeModules.RNGeoSpark.stopTracking();
 };
 
-//Android Method
-const getCurrentLocation = (type,accuracy,successCallback,errorCallback) => {
-  NativeModules.RNGeoSpark.getCurrentLocation(type,accuracy,successCallback,errorCallback);
-};
-
-//IOS Method
-const getCurrentLocation = (successCallback,errorCallback) => {
-  NativeModules.RNGeoSpark.getCurrentLocation(successCallback,errorCallback);
-};
-
 const updateCurrentLocation = (accuracy) => {
   NativeModules.RNGeoSpark.updateCurrentLocation(accuracy);
 };
@@ -161,7 +149,6 @@ const GeoSpark = {
  requestLocationServices,
  disableBatteryOptimization,
  isBatteryOptimizationEnabled,
- isMockEnabledInDevice,
  createUser,
  getUser,
  setDescription,
@@ -173,7 +160,6 @@ const GeoSpark = {
  geofenceList,
  startTracking,
  stopTracking,
- getCurrentLocation,
  updateCurrentLocation,
  logout,
  setTrackingInAppState,
