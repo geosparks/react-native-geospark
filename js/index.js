@@ -16,6 +16,8 @@ const Type = {
  FOREGROUND : 'FOREGROUND',
  BACKGROUND : 'BACKGROUND',
  ALWAYS_ON : 'ALWAYS_ON',
+ GPS:'GPS' 
+ GPS_NETWORK:'GPS_NETWORK'
 }
 
 const IOSType = {
@@ -62,8 +64,8 @@ const isBatteryOptimizationEnabled = (callback) => {
   NativeModules.RNGeoSpark.isBatteryOptimizationEnabled(callback);
 };
 
-const isMockEnabledInDevice = (callback) => {
-  NativeModules.RNGeoSpark.isMockEnabledInDevice(callback);
+const isLocationTracking = (callback) => {
+  NativeModules.RNGeoSpark.isLocationTracking(callback);
 };
 
 const createUser = (description,successCallback,errorCallback) => {
@@ -78,8 +80,8 @@ const setDescription = (description,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.setDescription(description,successCallback,errorCallback);
 };
 
-const startTrip = (description,successCallback,errorCallback) => {
-  NativeModules.RNGeoSpark.startTrip(description,successCallback,errorCallback);
+const startTrip = (tripId,description,successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.startTrip(tripId,description,successCallback,errorCallback);
 };
 
 const endTrip = (tripId,successCallback,errorCallback) => {
@@ -108,6 +110,20 @@ const startTracking = () => {
 
 const stopTracking = () => {
   NativeModules.RNGeoSpark.stopTracking();
+};
+
+//Android Method
+const getCurrentLocation = (type,accuracy,successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.getCurrentLocation(type,accuracy,successCallback,errorCallback);
+};
+
+//IOS Method
+const getCurrentLocation = (successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.getCurrentLocation(successCallback,errorCallback);
+};
+
+const updateCurrentLocation = (accuracy) => {
+  NativeModules.RNGeoSpark.updateCurrentLocation(accuracy);
 };
 
 const logout = (successCallback,errorCallback) => {
@@ -157,6 +173,8 @@ const GeoSpark = {
  geofenceList,
  startTracking,
  stopTracking,
+ getCurrentLocation,
+ updateCurrentLocation,
  logout,
  setTrackingInAppState,
  setTrackingInMotion,
