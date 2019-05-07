@@ -13,14 +13,17 @@ import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
 import com.geospark.lib.callback.GeoSparkCallBack;
 import com.geospark.lib.callback.GeoSparkGeofenceCallBack;
+import com.geospark.lib.callback.GeoSparkLocationCallback;
 import com.geospark.lib.callback.GeoSparkLogoutCallBack;
 import com.geospark.lib.callback.GeoSparkTripCallBack;
 import com.geospark.lib.callback.GeoSparkTripsCallBack;
+import com.geospark.lib.model.GeoSparkActiveTrips;
 import com.geospark.lib.model.GeoSparkError;
 import com.geospark.lib.model.GeoSparkGeofence;
 import com.geospark.lib.model.GeoSparkTrip;
-import com.geospark.lib.model.GeoSparkTrips;
 import com.geospark.lib.model.GeoSparkUser;
+
+import java.util.List;
 
 public class RNGeoSpark extends ReactContextBaseJavaModule {
     ReactApplicationContext reactContext;
@@ -56,8 +59,8 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isMockEnabledInDevice(Callback callback) {
-        callback.invoke(RNGeoSparkUtils.checkEnabled(GeoSpark.isMockEnabledInDevice(reactContext)));
+    public void isLocationTracking(Callback callback) {
+        callback.invoke(RNGeoSparkUtils.checkEnabled(GeoSpark.isLocationTracking(reactContext)));
     }
 
     @ReactMethod
@@ -128,13 +131,12 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startTrip(String description, final Callback successCallback, final Callback errorCallback) {
-        GeoSpark.startTrip(reactContext, description, new GeoSparkTripCallBack() {
+    public void startTrip(String tripId, String description, final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.startTrip(reactContext, tripId, description, new GeoSparkTripCallBack() {
             @Override
             public void onSuccess(GeoSparkTrip geoSparkTrip) {
                 WritableMap map = Arguments.createMap();
-                map.putString("tripId", geoSparkTrip.getTripId());
-                map.putString("tripStartedAt", geoSparkTrip.getTripStartedAt());
+                map.putString("msg", geoSparkTrip.getMsg());
                 successCallback.invoke(map);
             }
 
@@ -151,8 +153,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
             @Override
             public void onSuccess(GeoSparkTrip geoSparkTrip) {
                 WritableMap map = Arguments.createMap();
-                map.putString("tripId", geoSparkTrip.getTripId());
-                map.putString("tripEndedAt", geoSparkTrip.getTripEndedAt());
+                map.putString("message", geoSparkTrip.getMsg());
                 successCallback.invoke(map);
             }
 
@@ -167,9 +168,9 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     public void activeTrips(final Callback successCallback, final Callback errorCallback) {
         GeoSpark.activeTrips(reactContext, new GeoSparkTripsCallBack() {
             @Override
-            public void onSuccess(GeoSparkTrips geoSparkTrips) {
+            public void onSuccess(List<GeoSparkActiveTrips> geoSparkActiveTrips) {
                 WritableMap map = Arguments.createMap();
-                map.putMap("activeTrips", RNGeoSparkUtils.mapForTripList(geoSparkTrips.getTripsId()));
+                map.putMap("activeTrips", RNGeoSparkUtils.mapForTripList(geoSparkActiveTrips));
                 successCallback.invoke(map);
             }
 
@@ -243,6 +244,30 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     @ReactMethod
     public void stopTracking() {
         GeoSpark.stopTracking(reactContext);
+    }
+
+    @ReactMethod
+    public void getCurrentLocation(String type, int accuracy, final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.getCurrentLocation(reactContext, RNGeoSparkUtils.stringToEnum(type), accuracy, new GeoSparkLocationCallback() {
+            @Override
+            public void location(double latitude, double longitude, double accuracy) {
+                WritableMap map = Arguments.createMap();
+                map.putDouble("latitude", latitude);
+                map.putDouble("longitude", longitude);
+                map.putDouble("accuracy", accuracy);
+                successCallback.invoke(map);
+            }
+
+            @Override
+            public void onFailure(GeoSparkError geoSparkError) {
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
+            }
+        });
+    }
+
+    @ReactMethod
+    public void updateCurrentLocation(int accuracy) {
+        GeoSpark.updateCurrentLocation(reactContext, accuracy);
     }
 
     @ReactMethod
