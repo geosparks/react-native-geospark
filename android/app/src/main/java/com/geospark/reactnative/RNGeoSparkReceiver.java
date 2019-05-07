@@ -11,6 +11,7 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.geospark.lib.location.services.GeoSparkReceiver;
+import com.geospark.lib.model.GeoSparkError;
 import com.geospark.lib.model.GeoSparkUser;
 
 
@@ -49,5 +50,12 @@ public class RNGeoSparkReceiver extends GeoSparkReceiver {
         map.putMap("user", RNGeoSparkUtils.mapForUser(geoSparkUser));
         map.putString("activity", activity);
         sendEvent("location", map);
+    }
+
+    @Override
+    public void onError(Context context, GeoSparkError geoSparkError) {
+        ReactApplication reactApplication = (ReactApplication) context.getApplicationContext();
+        mReactNativeHost = reactApplication.getReactNativeHost();
+        sendEvent("error", RNGeoSparkUtils.mapForError(geoSparkError));
     }
 }
