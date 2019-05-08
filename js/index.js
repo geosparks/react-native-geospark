@@ -54,6 +54,18 @@ const requestLocationServices = () => {
   NativeModules.RNGeoSpark.requestLocationServices();
 };
 
+const disableBatteryOptimization = () => {
+  NativeModules.RNGeoSpark.disableBatteryOptimization();
+};
+
+const isBatteryOptimizationEnabled = (callback) => {
+  NativeModules.RNGeoSpark.isBatteryOptimizationEnabled(callback);
+};
+
+const isLocationTracking = (callback) => {
+  NativeModules.RNGeoSpark.isLocationTracking(callback);
+};
+
 const createUser = (description,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.createUser(description,successCallback,errorCallback);
 };
@@ -66,8 +78,8 @@ const setDescription = (description,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.setDescription(description,successCallback,errorCallback);
 };
 
-const startTrip = (description,successCallback,errorCallback) => {
-  NativeModules.RNGeoSpark.startTrip(description,successCallback,errorCallback);
+const startTrip = (tripId,description,successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.startTrip(tripId,description,successCallback,errorCallback);
 };
 
 const endTrip = (tripId,successCallback,errorCallback) => {
@@ -96,6 +108,10 @@ const startTracking = () => {
 
 const stopTracking = () => {
   NativeModules.RNGeoSpark.stopTracking();
+};
+
+const updateCurrentLocation = (accuracy) => {
+  NativeModules.RNGeoSpark.updateCurrentLocation(accuracy);
 };
 
 const logout = (successCallback,errorCallback) => {
@@ -131,6 +147,8 @@ const GeoSpark = {
  requestMotionPermission,
  requestLocationPermission,
  requestLocationServices,
+ disableBatteryOptimization,
+ isBatteryOptimizationEnabled,
  createUser,
  getUser,
  setDescription,
@@ -142,6 +160,7 @@ const GeoSpark = {
  geofenceList,
  startTracking,
  stopTracking,
+ updateCurrentLocation,
  logout,
  setTrackingInAppState,
  setTrackingInMotion,

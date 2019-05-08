@@ -6,9 +6,9 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
+import com.geospark.lib.model.GeoSparkActiveTrips;
 import com.geospark.lib.model.GeoSparkError;
 import com.geospark.lib.model.GeoSparkGeofence;
-import com.geospark.lib.model.GeoSparkTrips;
 import com.geospark.lib.model.GeoSparkUser;
 
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ public class RNGeoSparkUtils {
         return "DENIED";
     }
 
-    static String checkLocationServices(boolean hasGranted) {
-        if (hasGranted) {
+    static String checkEnabled(boolean hasEnabled) {
+        if (hasEnabled) {
             return "ENABLED";
         }
         return "DISABLED";
@@ -62,16 +62,20 @@ public class RNGeoSparkUtils {
         return map;
     }
 
-    static WritableMap mapForTripList(List<GeoSparkTrips> trips) {
+    static WritableMap mapForTripList(List<GeoSparkActiveTrips> trips) {
         if (trips == null && trips.size() == 0) {
             return null;
         }
         WritableMap map = Arguments.createMap();
         for (int i = 0; i < trips.size(); i++) {
             WritableMap mapData = Arguments.createMap();
-            GeoSparkTrips geoSparkTrips = trips.get(i);
-            mapData.putString("tripId", geoSparkTrips.getTripId());
-            mapData.putString("tripStartedAt", geoSparkTrips.getTripStartedAt());
+            GeoSparkActiveTrips geoSparkActiveTrips = trips.get(i);
+            mapData.putString("tripId", geoSparkActiveTrips.getTripId());
+            mapData.putBoolean("isStarted", geoSparkActiveTrips.getIsStarted());
+            mapData.putBoolean("isEnded", geoSparkActiveTrips.getIsEnded());
+            mapData.putBoolean("isDeleted", geoSparkActiveTrips.getIsDeleted());
+            mapData.putString("createdAt", geoSparkActiveTrips.getCreatedAt());
+            mapData.putString("updatedAt", geoSparkActiveTrips.getUpdatedAt());
             map.putMap(String.valueOf(i), mapData);
         }
         return map;
