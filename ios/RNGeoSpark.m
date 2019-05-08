@@ -100,9 +100,9 @@ RCT_EXPORT_METHOD(checkMotionPermission :(RCTResponseSenderBlock)callback){
 }
 
 
-RCT_EXPORT_METHOD(tripId:(NSString *)tripId startTrip:(NSString *)tripDescription :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+RCT_EXPORT_METHOD(startTrip:(NSString *)tripId trip:(NSString *)tripDes:(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
     dispatch_async(dispatch_get_main_queue(), ^{
-        [GeoSpark startTrip: tripId :tripDescription  :^(GeoSparkTrip * trip) {
+        [GeoSpark startTrip: tripId :tripDes  :^(GeoSparkTrip * trip) {
           NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
           [dict setValue:trip.msg  forKey:@"msg"];
           NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
@@ -127,21 +127,23 @@ RCT_EXPORT_METHOD(endTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCal
 
 RCT_EXPORT_METHOD(activeTrips :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
   [GeoSpark activeTrip:^(ActiveTripsV2Response * response) {
-    NSMutableDictionary *tripsData = [[NSMutableDictionary alloc] init];
-    NSMutableDictionary *trip = [[NSMutableDictionary alloc] init];
-
+    NSMutableArray *tripsArray = [[NSMutableArray alloc] init];
     for (int i = 0; i < [response.trips count]; i++) {
       ActiveTripsV2ResponseData  *tripValue = [response.trips objectAtIndex:i];
-      [trip setValue:tripValue.trip_id forKey:@"tripId"];
-      [trip setValue:[NSString stringWithFormat:@"%c", tripValue.isStarted] forKey:@"isStarted"];
-      [trip setValue:[NSString stringWithFormat:@"%c", tripValue.isEnded] forKey:@"isEnded"];
-      [trip setValue:[NSString stringWithFormat:@"%c", tripValue.isDeleted] forKey:@"isDeleted"];
-      [trip setValue:tripValue.createdAt forKey:@"createdAt"];
-      [trip setValue:tripValue.updatedAt forKey:@"updatedAt"];
+      NSMutableDictionary *trip = [[NSMutableDictionary alloc] init];
+      trip[@"tripId"] = tripValue.trip_id;
+      trip[@"isStarted"] = @(tripValue.isStarted);
+      trip[@"isEnded"] = @(tripValue.isEnded);
+      trip[@"isDeleted"] = @(tripValue.isDeleted);
+      trip[@"createdAt"] = tripValue.createdAt;
+      trip[@"updatedAt"] = tripValue.updatedAt;
+      [tripsArray addObject:trip];
     }
-    [tripsData setValue:trip forKey:@"activeTrips"];
+    NSLog(@"%@",tripsArray);
+    NSDictionary *tripsData = [[NSDictionary alloc] initWithObjectsAndKeys:tripsArray,@"activeTrips", nil];
     NSArray *outArray = [[NSArray alloc] initWithObjects:tripsData, nil];
     successCallback(outArray);
+
   } onFailure:^(GeoSparkError * error) {
        errorCallback([self error:error]);
   }];
@@ -278,4 +280,4 @@ RCT_EXPORT_METHOD(setTrackingInMotion:(NSArray *)motions){
   return @([strippedString integerValue]);
 }
 
-@endx
+@end
