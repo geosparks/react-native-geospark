@@ -66,6 +66,10 @@ const isLocationTracking = (callback) => {
   NativeModules.RNGeoSpark.isLocationTracking(callback);
 };
 
+const getDeviceToken = (callback) => {
+  NativeModules.RNGeoSpark.getDeviceToken(callback);
+};
+
 const createUser = (description,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.createUser(description,successCallback,errorCallback);
 };
@@ -89,18 +93,6 @@ const endTrip = (tripId,successCallback,errorCallback) => {
 const activeTrips = (successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.activeTrips(successCallback,errorCallback);
 };
-
-const createGeofence = (latitude,longitude,radius,expireInSeconds,successCallback,errorCallback) => {
-  NativeModules.RNGeoSpark.createGeofence(latitude,longitude,radius,expireInSeconds,successCallback,errorCallback);
-};
-
-const deleteGeofence = (geofenceId,successCallback,errorCallback) => {
-  NativeModules.RNGeoSpark.deleteGeofence(geofenceId,successCallback,errorCallback);
-};
- 
-const geofenceList = (successCallback,errorCallback) => {
-  NativeModules.RNGeoSpark.geofenceList(successCallback,errorCallback);
-};
    
 const startTracking = () => {
   NativeModules.RNGeoSpark.startTracking();
@@ -108,6 +100,14 @@ const startTracking = () => {
 
 const stopTracking = () => {
   NativeModules.RNGeoSpark.stopTracking();
+};
+
+const getCurrentLocation = (accuracy,location,errorCallback) => {
+  NativeModules.RNGeoSpark.getCurrentLocation(accuracy,location,errorCallback);
+};
+
+const getCurrentLocationIos = (accuracy,location) => {
+  NativeModules.RNGeoSpark.getCurrentLocation(accuracy,location);
 };
 
 const updateCurrentLocation = (accuracy) => {
@@ -149,17 +149,17 @@ const GeoSpark = {
  requestLocationServices,
  disableBatteryOptimization,
  isBatteryOptimizationEnabled,
+ getDeviceToken,
  createUser,
  getUser,
  setDescription,
  startTrip,
  endTrip ,
  activeTrips,
- createGeofence,
- deleteGeofence,
- geofenceList,
  startTracking,
  stopTracking,
+ getCurrentLocation,
+ getCurrentLocationIos,
  updateCurrentLocation,
  logout,
  setTrackingInAppState,

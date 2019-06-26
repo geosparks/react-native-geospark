@@ -12,14 +12,12 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
 import com.geospark.lib.callback.GeoSparkCallBack;
-import com.geospark.lib.callback.GeoSparkGeofenceCallBack;
 import com.geospark.lib.callback.GeoSparkLocationCallback;
 import com.geospark.lib.callback.GeoSparkLogoutCallBack;
 import com.geospark.lib.callback.GeoSparkTripCallBack;
 import com.geospark.lib.callback.GeoSparkTripsCallBack;
 import com.geospark.lib.model.GeoSparkActiveTrips;
 import com.geospark.lib.model.GeoSparkError;
-import com.geospark.lib.model.GeoSparkGeofence;
 import com.geospark.lib.model.GeoSparkTrip;
 import com.geospark.lib.model.GeoSparkUser;
 
@@ -77,6 +75,11 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
         if (activity != null) {
             GeoSpark.requestLocationServices(getCurrentActivity());
         }
+    }
+
+    @ReactMethod
+    public void getDeviceToken(Callback callback) {
+        callback.invoke(GeoSpark.getDeviceToken(reactContext));
     }
 
     @ReactMethod
@@ -182,61 +185,6 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void createGeofence(double latitude, double longitude, int radius, int expireInSeconds, final Callback successCallback, final Callback errorCallback) {
-        GeoSpark.createGeofence(reactContext, latitude, longitude, radius, expireInSeconds, new GeoSparkGeofenceCallBack() {
-            @Override
-            public void onSuccess(GeoSparkGeofence geoSparkGeofence) {
-                WritableMap map = Arguments.createMap();
-                map.putString("geofenceId", geoSparkGeofence.getId());
-                map.putString("createdAt", geoSparkGeofence.getCreatedAt());
-                map.putString("expireAt", geoSparkGeofence.getExpiresAt());
-                map.putDouble("latitude", geoSparkGeofence.getCoordinates().get(0));
-                map.putDouble("longitude", geoSparkGeofence.getCoordinates().get(1));
-                successCallback.invoke(map);
-            }
-
-            @Override
-            public void onFailure(GeoSparkError geoSparkError) {
-                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
-            }
-        });
-    }
-
-    @ReactMethod
-    public void deleteGeofence(String geofenceId, final Callback successCallback, final Callback errorCallback) {
-        GeoSpark.deleteGeofence(reactContext, geofenceId, new GeoSparkGeofenceCallBack() {
-            @Override
-            public void onSuccess(GeoSparkGeofence geoSparkGeofence) {
-                WritableMap map = Arguments.createMap();
-                map.putString("message", geoSparkGeofence.getMessage());
-                successCallback.invoke(map);
-            }
-
-            @Override
-            public void onFailure(GeoSparkError geoSparkError) {
-                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
-            }
-        });
-    }
-
-    @ReactMethod
-    public void geofenceList(final Callback successCallback, final Callback errorCallback) {
-        GeoSpark.geofenceList(reactContext, new GeoSparkGeofenceCallBack() {
-            @Override
-            public void onSuccess(GeoSparkGeofence geoSparkGeofence) {
-                WritableMap map = Arguments.createMap();
-                map.putMap("geofenceList", RNGeoSparkUtils.mapForGeofenceList(geoSparkGeofence.getGeofenceList()));
-                successCallback.invoke(map);
-            }
-
-            @Override
-            public void onFailure(GeoSparkError geoSparkError) {
-                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
-            }
-        });
-    }
-
-    @ReactMethod
     public void startTracking() {
         GeoSpark.startTracking(reactContext);
     }
@@ -247,8 +195,8 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getCurrentLocation(String type, int accuracy, final Callback successCallback, final Callback errorCallback) {
-        GeoSpark.getCurrentLocation(reactContext, RNGeoSparkUtils.stringToEnum(type), accuracy, new GeoSparkLocationCallback() {
+    public void getCurrentLocation(int accuracy, final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.getCurrentLocation(reactContext, accuracy, new GeoSparkLocationCallback() {
             @Override
             public void location(double latitude, double longitude, double accuracy) {
                 WritableMap map = Arguments.createMap();
