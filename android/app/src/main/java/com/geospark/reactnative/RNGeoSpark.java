@@ -76,7 +76,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
             GeoSpark.requestLocationServices(getCurrentActivity());
         }
     }
-    
+
     @ReactMethod
     public void getDeviceToken(Callback callback) {
         callback.invoke(GeoSpark.getDeviceToken(reactContext));
