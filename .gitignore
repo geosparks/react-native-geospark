@@ -1,0 +1,6 @@
+
+*.bin
+*.lock
+*.properties
+*.ser
+*.rawproto

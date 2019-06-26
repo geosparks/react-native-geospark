@@ -8,7 +8,6 @@ import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
 import com.geospark.lib.model.GeoSparkActiveTrips;
 import com.geospark.lib.model.GeoSparkError;
-import com.geospark.lib.model.GeoSparkGeofence;
 import com.geospark.lib.model.GeoSparkUser;
 
 import java.util.ArrayList;
@@ -41,24 +40,6 @@ public class RNGeoSparkUtils {
         map.putDouble("accuracy", location.getAccuracy());
         map.putDouble("altitude", location.getAltitude());
         map.putDouble("speed", location.getSpeed());
-        return map;
-    }
-
-    static WritableMap mapForGeofenceList(List<GeoSparkGeofence> geofences) {
-        if (geofences == null && geofences.size() == 0) {
-            return null;
-        }
-        WritableMap map = Arguments.createMap();
-        for (int i = 0; i < geofences.size(); i++) {
-            WritableMap mapData = Arguments.createMap();
-            GeoSparkGeofence geoSparkGeofence = geofences.get(i);
-            mapData.putString("geofenceId", geoSparkGeofence.getId());
-            mapData.putString("createdAt", geoSparkGeofence.getCreatedAt());
-            mapData.putString("expireAt", geoSparkGeofence.getExpiresAt());
-            mapData.putDouble("latitude", geoSparkGeofence.getCoordinates().get(0));
-            mapData.putDouble("longitude", geoSparkGeofence.getCoordinates().get(1));
-            map.putMap(String.valueOf(i), mapData);
-        }
         return map;
     }
 
