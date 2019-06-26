@@ -99,19 +99,19 @@ RCT_EXPORT_METHOD(checkMotionPermission :(RCTResponseSenderBlock)callback){
   callback(dict);
 }
 
-
 RCT_EXPORT_METHOD(startTrip:(NSString *)tripId trip:(NSString *)tripDes:(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
     dispatch_async(dispatch_get_main_queue(), ^{
-        [GeoSpark startTrip: tripId :tripDes  :^(GeoSparkTrip * trip) {
-          NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-          [dict setValue:trip.msg  forKey:@"msg"];
-          NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
-          successCallback(array);
-        } onFailure:^(GeoSparkError * error) {
-            errorCallback([self error:error]);
-        }];
+      [GeoSpark startTrip:tripId :@"" :^(GeoSparkTrip * trip) {
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+        [dict setValue:trip.msg  forKey:@"msg"];
+        NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
+        successCallback(array);
+      } onFailure:^(GeoSparkError * error) {
+        errorCallback([self error:error]);
+      }];
     });
 }
+
 RCT_EXPORT_METHOD(endTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
   dispatch_async(dispatch_get_main_queue(), ^{
     [GeoSpark endTrip:tripId :^(GeoSparkTrip * trip) {
@@ -126,83 +126,26 @@ RCT_EXPORT_METHOD(endTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCal
 }
 
 RCT_EXPORT_METHOD(activeTrips :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  [GeoSpark activeTrip:^(ActiveTripsV2Response * response) {
-    NSMutableArray *tripsArray = [[NSMutableArray alloc] init];
-    for (int i = 0; i < [response.trips count]; i++) {
-      ActiveTripsV2ResponseData  *tripValue = [response.trips objectAtIndex:i];
-      NSMutableDictionary *trip = [[NSMutableDictionary alloc] init];
-      trip[@"tripId"] = tripValue.trip_id;
-      trip[@"isStarted"] = @(tripValue.isStarted);
-      trip[@"isEnded"] = @(tripValue.isEnded);
-      trip[@"isDeleted"] = @(tripValue.isDeleted);
-      trip[@"createdAt"] = tripValue.createdAt;
-      trip[@"updatedAt"] = tripValue.updatedAt;
-      [tripsArray addObject:trip];
-    }
-    NSLog(@"%@",tripsArray);
-    NSDictionary *tripsData = [[NSDictionary alloc] initWithObjectsAndKeys:tripsArray,@"activeTrips", nil];
-    NSArray *outArray = [[NSArray alloc] initWithObjects:tripsData, nil];
-    successCallback(outArray);
-
-  } onFailure:^(GeoSparkError * error) {
-       errorCallback([self error:error]);
-  }];
-}
-
-RCT_EXPORT_METHOD(createGeofence:(double)latitude :(double)longitude :(NSInteger)radius :(NSInteger)expiryTime :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark createGeofenceWithLatitude:latitude longitude:longitude expiry:expiryTime radius:radius :^(GeoSparkGeofence * geofence) {
-      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      [dict setValue:geofence.geofence_id  forKey:@"geofenceId"];
-      [dict setValue:geofence.create_at  forKey:@"createdAt"];
-      [dict setValue:geofence.expire_at  forKey:@"expireAt"];
-      [dict setValue:geofence.coordinate.firstObject  forKey:@"latitude"];
-      [dict setValue:geofence.coordinate.lastObject  forKey:@"longitude"];
-      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
-      successCallback(array);
-    } onFailure:^(GeoSparkError * error) {
-      errorCallback([self error:error]);
-    }];
-  });
-}
-
-RCT_EXPORT_METHOD(deleteGeofence:(NSString *)geofenceId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark deleteGeofence:geofenceId :^(NSString * geofence) {
-      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      [dict setValue:geofence  forKey:@"message"];
-      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
-      successCallback(array);
-    } onFailure:^(GeoSparkError * error) {
-      errorCallback([self error:error]);
-    }];
-  });
-}
-
-RCT_EXPORT_METHOD(geofenceList:(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark geofenceList:^(GeoSparkGeofenceList * list) {
-      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      NSMutableDictionary *dict1 = [[NSMutableDictionary alloc] init];
-      for (int i = 0; i < [list.data count]; i++)
-      {
-        GeoSparkGeofenceListData *listData = [list.data objectAtIndex:i];
-        NSMutableDictionary *dict2 = [[NSMutableDictionary alloc] init];
-        [dict2 setValue:listData.geofenceId forKey:@"geofenceId"];
-        [dict2 setValue:listData.expiresAt forKey:@"expiresAt"];
-        [dict2 setValue:listData.createdAt forKey:@"createdAt"];
-        [dict2 setValue:[NSNumber numberWithInteger:listData.geometryRadius] forKey:@"geometryRadius"];
-        [dict2 setValue:listData.coordinates.firstObject forKey:@"latitude"];
-        [dict2 setValue:listData.coordinates.lastObject forKey:@"longitude"];
-        [dict setValue:dict2 forKey:[@(i) stringValue]];
+    [GeoSpark activeTrips:^(GeoSparkActiveTrips * trip) {
+      NSMutableArray *tripsArray = [[NSMutableArray alloc] init];
+      for (int i =0; i < [trip.trips count]; i++) {
+        ActiveTripsResponse *tripResponse = [trip.trips objectAtIndex:i];
+        NSMutableDictionary *trip = [[NSMutableDictionary alloc] init];
+        trip[@"tripId"] = tripResponse.trip_id;
+        trip[@"isStarted"] = @(tripResponse.isStarted);
+        trip[@"isEnded"] = @(tripResponse.isEnded);
+        trip[@"isDeleted"] = @(tripResponse.isDeleted);
+        trip[@"createdAt"] = tripResponse.createdAt;
+        trip[@"updatedAt"] = tripResponse.updatedAt;
+        [tripsArray addObject:trip];
       }
-      [dict1 setValue:dict forKey:@"activeTrips"];
-      NSArray *outArray = [[NSArray alloc] initWithObjects:dict1, nil];
-      successCallback(outArray);
+      NSDictionary *tripsData = [[NSDictionary alloc] initWithObjectsAndKeys:tripsArray,@"activeTrips", nil];
+      NSArray *outArray = [[NSArray alloc] initWithObjects:tripsData, nil];
+        successCallback(outArray);
+      
     } onFailure:^(GeoSparkError * error) {
-      errorCallback([self error:error]);
+     errorCallback([self error:error]);
     }];
-  });
 }
 
 RCT_EXPORT_METHOD(startTracking){
@@ -226,9 +169,9 @@ RCT_EXPORT_METHOD(logout:(RCTResponseSenderBlock)successCallback rejecter:(RCTRe
   });
 }
 
-RCT_EXPORT_METHOD(getCurrentLocation:(RCTResponseSenderBlock)successCallback){
+RCT_EXPORT_METHOD(accuracy:(NSInteger *)accuracy getCurrentLocation:(RCTResponseSenderBlock)successCallback){
   dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark getCurrentLocationWithLocation:^(GSLocation * location) {
+    [GeoSpark getCurrentLocation:*accuracy location:^(GSLocation * location) {
       NSMutableDictionary *locationDict = [[NSMutableDictionary alloc] init];
       [locationDict setValue:[NSNumber numberWithDouble:location.latitude]  forKey:@"latitude"];
       [locationDict setValue:[NSNumber numberWithDouble:location.longitude]  forKey:@"longitude"];
@@ -241,7 +184,7 @@ RCT_EXPORT_METHOD(getCurrentLocation:(RCTResponseSenderBlock)successCallback){
 
 RCT_EXPORT_METHOD(accuracy:(NSInteger *)accuracy updateCurrentLocation:(RCTResponseSenderBlock)successCallback){
   dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark updateCurrentLocation:accuracy];
+    [GeoSpark updateCurrentLocation:*accuracy];
   });
 }
 
