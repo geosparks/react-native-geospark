@@ -93,7 +93,7 @@ const endTrip = (tripId,successCallback,errorCallback) => {
 const activeTrips = (successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.activeTrips(successCallback,errorCallback);
 };
-   
+ 
 const startTracking = () => {
   NativeModules.RNGeoSpark.startTracking();
 };
