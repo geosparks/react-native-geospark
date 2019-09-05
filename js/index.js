@@ -86,6 +86,14 @@ const startTrip = (tripId,description,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.startTrip(tripId,description,successCallback,errorCallback);
 };
 
+const resumeTrip = (tripId,successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.resumeTrip(tripId,successCallback,errorCallback);
+};
+
+const pauseTrip = (tripId,successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.pauseTrip(tripId,successCallback,errorCallback);
+};
+
 const endTrip = (tripId,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.endTrip(tripId,successCallback,errorCallback);
 };
@@ -93,7 +101,15 @@ const endTrip = (tripId,successCallback,errorCallback) => {
 const activeTrips = (successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.activeTrips(successCallback,errorCallback);
 };
- 
+
+const toggleEvents = (geofence,trip,activity,successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.toggleEvents(geofence,trip,activity,successCallback,errorCallback);
+};
+
+const getEventsStatus = (successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.getEventsStatus(successCallback,errorCallback);
+};
+
 const startTracking = () => {
   NativeModules.RNGeoSpark.startTracking();
 };
@@ -153,7 +169,11 @@ const GeoSpark = {
  createUser,
  getUser,
  setDescription,
+ toggleEvents,
+ getEventsStatus,
  startTrip,
+ resumeTrip,
+ pauseTrip,
  endTrip ,
  activeTrips,
  startTracking,
