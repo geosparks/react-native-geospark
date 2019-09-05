@@ -8,6 +8,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
 import com.geospark.lib.model.GeoSparkActiveTrips;
 import com.geospark.lib.model.GeoSparkError;
+import com.geospark.lib.model.GeoSparkEvents;
 import com.geospark.lib.model.GeoSparkUser;
 
 import java.util.ArrayList;
@@ -52,13 +53,24 @@ public class RNGeoSparkUtils {
             WritableMap mapData = Arguments.createMap();
             GeoSparkActiveTrips geoSparkActiveTrips = trips.get(i);
             mapData.putString("tripId", geoSparkActiveTrips.getTripId());
-            mapData.putBoolean("isStarted", geoSparkActiveTrips.getIsStarted());
-            mapData.putBoolean("isEnded", geoSparkActiveTrips.getIsEnded());
-            mapData.putBoolean("isDeleted", geoSparkActiveTrips.getIsDeleted());
+            mapData.putBoolean("isStarted", geoSparkActiveTrips.isStarted());
+            mapData.putBoolean("isEnded", geoSparkActiveTrips.isEnded());
+            mapData.putBoolean("isDeleted", geoSparkActiveTrips.isDeleted());
             mapData.putString("createdAt", geoSparkActiveTrips.getCreatedAt());
             mapData.putString("updatedAt", geoSparkActiveTrips.getUpdatedAt());
             map.putMap(String.valueOf(i), mapData);
         }
+        return map;
+    }
+
+    static WritableMap mapForEvents(GeoSparkEvents geoSparkEvents) {
+        if (geoSparkEvents == null) {
+            return null;
+        }
+        WritableMap map = Arguments.createMap();
+        map.putBoolean("geofence", geoSparkEvents.isGeofenceEventsActive());
+        map.putBoolean("trip", geoSparkEvents.isTripEventsActive());
+        map.putBoolean("activity", geoSparkEvents.isActivityEventsActive());
         return map;
     }
 

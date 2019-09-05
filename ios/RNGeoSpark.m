@@ -125,6 +125,63 @@ RCT_EXPORT_METHOD(endTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCal
   });
 }
 
+RCT_EXPORT_METHOD(pauseTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [GeoSpark pauseTrip:tripId :^(GeoSparkTrip * trip) {
+      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+      [dict setValue:trip.msg  forKey:@"msg"];
+      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
+      successCallback(array);
+    } onFailure:^(GeoSparkError * error) {
+      errorCallback([self error:error]);
+    }];
+  });
+}
+
+RCT_EXPORT_METHOD(resumeTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [GeoSpark resumeTrip:tripId :^(GeoSparkTrip * trip) {
+      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+      [dict setValue:trip.msg  forKey:@"msg"];
+      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
+      successCallback(array);
+    } onFailure:^(GeoSparkError * error) {
+      errorCallback([self error:error]);
+    }];
+  });
+}
+
+RCT_EXPORT_METHOD(toggleEvents: (BOOL)geofence: (BOOL)trip: (BOOL)activity :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [GeoSpark toggleEventsWithGeofence:geofence Trip:trip Activity:activity :^(GeoSparkEvents * events) {
+      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+      [dict setValue:[NSNumber numberWithBool:events.activityEvents]  forKey:@"activity"];
+      [dict setValue:[NSNumber numberWithBool:events.tripsEvents]  forKey:@"trip"];
+      [dict setValue:[NSNumber numberWithBool:events.geofenceEvents]  forKey:@"geofence"];
+      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
+      successCallback(array);
+    } onFailure:^(GeoSparkError * error) {
+      errorCallback([self error:error]);
+    }];
+  });
+}
+
+RCT_EXPORT_METHOD(getEventsStatus:(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [GeoSpark getEventsStatus:^(GeoSparkEvents * events) {
+      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+      [dict setValue:[NSNumber numberWithBool:events.activityEvents]  forKey:@"activity"];
+      [dict setValue:[NSNumber numberWithBool:events.tripsEvents]  forKey:@"trip"];
+      [dict setValue:[NSNumber numberWithBool:events.geofenceEvents]  forKey:@"geofence"];
+      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
+      successCallback(array);
+    } onFailure:^(GeoSparkError * error) {
+      errorCallback([self error:error]);
+    }];
+  });
+}
+
+
 RCT_EXPORT_METHOD(activeTrips :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
     [GeoSpark activeTrips:^(GeoSparkActiveTrips * trip) {
       NSMutableArray *tripsArray = [[NSMutableArray alloc] init];
