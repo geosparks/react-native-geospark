@@ -8,7 +8,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
 import com.geospark.lib.model.GeoSparkActiveTrips;
 import com.geospark.lib.model.GeoSparkError;
-import com.geospark.lib.model.GeoSparkGeofence;
+import com.geospark.lib.model.GeoSparkEvents;
 import com.geospark.lib.model.GeoSparkUser;
 
 import java.util.ArrayList;
@@ -44,24 +44,6 @@ public class RNGeoSparkUtils {
         return map;
     }
 
-    static WritableMap mapForGeofenceList(List<GeoSparkGeofence> geofences) {
-        if (geofences == null && geofences.size() == 0) {
-            return null;
-        }
-        WritableMap map = Arguments.createMap();
-        for (int i = 0; i < geofences.size(); i++) {
-            WritableMap mapData = Arguments.createMap();
-            GeoSparkGeofence geoSparkGeofence = geofences.get(i);
-            mapData.putString("geofenceId", geoSparkGeofence.getId());
-            mapData.putString("createdAt", geoSparkGeofence.getCreatedAt());
-            mapData.putString("expireAt", geoSparkGeofence.getExpiresAt());
-            mapData.putDouble("latitude", geoSparkGeofence.getCoordinates().get(0));
-            mapData.putDouble("longitude", geoSparkGeofence.getCoordinates().get(1));
-            map.putMap(String.valueOf(i), mapData);
-        }
-        return map;
-    }
-
     static WritableMap mapForTripList(List<GeoSparkActiveTrips> trips) {
         if (trips == null && trips.size() == 0) {
             return null;
@@ -71,13 +53,24 @@ public class RNGeoSparkUtils {
             WritableMap mapData = Arguments.createMap();
             GeoSparkActiveTrips geoSparkActiveTrips = trips.get(i);
             mapData.putString("tripId", geoSparkActiveTrips.getTripId());
-            mapData.putBoolean("isStarted", geoSparkActiveTrips.getIsStarted());
-            mapData.putBoolean("isEnded", geoSparkActiveTrips.getIsEnded());
-            mapData.putBoolean("isDeleted", geoSparkActiveTrips.getIsDeleted());
+            mapData.putBoolean("isStarted", geoSparkActiveTrips.isStarted());
+            mapData.putBoolean("isEnded", geoSparkActiveTrips.isEnded());
+            mapData.putBoolean("isDeleted", geoSparkActiveTrips.isDeleted());
             mapData.putString("createdAt", geoSparkActiveTrips.getCreatedAt());
             mapData.putString("updatedAt", geoSparkActiveTrips.getUpdatedAt());
             map.putMap(String.valueOf(i), mapData);
         }
+        return map;
+    }
+
+    static WritableMap mapForEvents(GeoSparkEvents geoSparkEvents) {
+        if (geoSparkEvents == null) {
+            return null;
+        }
+        WritableMap map = Arguments.createMap();
+        map.putBoolean("geofence", geoSparkEvents.isGeofenceEventsActive());
+        map.putBoolean("trip", geoSparkEvents.isTripEventsActive());
+        map.putBoolean("activity", geoSparkEvents.isActivityEventsActive());
         return map;
     }
 

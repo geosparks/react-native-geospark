@@ -66,6 +66,10 @@ const isLocationTracking = (callback) => {
   NativeModules.RNGeoSpark.isLocationTracking(callback);
 };
 
+const getDeviceToken = (callback) => {
+  NativeModules.RNGeoSpark.getDeviceToken(callback);
+};
+
 const createUser = (description,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.createUser(description,successCallback,errorCallback);
 };
@@ -82,6 +86,14 @@ const startTrip = (tripId,description,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.startTrip(tripId,description,successCallback,errorCallback);
 };
 
+const resumeTrip = (tripId,successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.resumeTrip(tripId,successCallback,errorCallback);
+};
+
+const pauseTrip = (tripId,successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.pauseTrip(tripId,successCallback,errorCallback);
+};
+
 const endTrip = (tripId,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.endTrip(tripId,successCallback,errorCallback);
 };
@@ -90,24 +102,28 @@ const activeTrips = (successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.activeTrips(successCallback,errorCallback);
 };
 
-const createGeofence = (latitude,longitude,radius,expireInSeconds,successCallback,errorCallback) => {
-  NativeModules.RNGeoSpark.createGeofence(latitude,longitude,radius,expireInSeconds,successCallback,errorCallback);
+const toggleEvents = (geofence,trip,activity,successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.toggleEvents(geofence,trip,activity,successCallback,errorCallback);
 };
 
-const deleteGeofence = (geofenceId,successCallback,errorCallback) => {
-  NativeModules.RNGeoSpark.deleteGeofence(geofenceId,successCallback,errorCallback);
+const getEventsStatus = (successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.getEventsStatus(successCallback,errorCallback);
 };
- 
-const geofenceList = (successCallback,errorCallback) => {
-  NativeModules.RNGeoSpark.geofenceList(successCallback,errorCallback);
-};
-   
+
 const startTracking = () => {
   NativeModules.RNGeoSpark.startTracking();
 };
 
 const stopTracking = () => {
   NativeModules.RNGeoSpark.stopTracking();
+};
+
+const getCurrentLocation = (accuracy,successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.getCurrentLocation(accuracy,successCallback,errorCallback);
+};
+
+const getCurrentLocationIos = (accuracy,successCallback) => {
+  NativeModules.RNGeoSpark.getCurrentLocation(accuracy,successCallback);
 };
 
 const updateCurrentLocation = (accuracy) => {
@@ -149,17 +165,21 @@ const GeoSpark = {
  requestLocationServices,
  disableBatteryOptimization,
  isBatteryOptimizationEnabled,
+ getDeviceToken,
  createUser,
  getUser,
  setDescription,
+ toggleEvents,
+ getEventsStatus,
  startTrip,
+ resumeTrip,
+ pauseTrip,
  endTrip ,
  activeTrips,
- createGeofence,
- deleteGeofence,
- geofenceList,
  startTracking,
  stopTracking,
+ getCurrentLocation,
+ getCurrentLocationIos,
  updateCurrentLocation,
  logout,
  setTrackingInAppState,
