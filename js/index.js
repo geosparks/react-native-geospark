@@ -118,12 +118,12 @@ const stopTracking = () => {
   NativeModules.RNGeoSpark.stopTracking();
 };
 
-const getCurrentLocation = (accuracy,location,errorCallback) => {
-  NativeModules.RNGeoSpark.getCurrentLocation(accuracy,location,errorCallback);
+const getCurrentLocation = (accuracy,successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.getCurrentLocation(accuracy,successCallback,errorCallback);
 };
 
-const getCurrentLocationIos = (accuracy,location) => {
-  NativeModules.RNGeoSpark.getCurrentLocation(accuracy,location);
+const getCurrentLocationIos = (accuracy,successCallback) => {
+  NativeModules.RNGeoSpark.getCurrentLocation(accuracy,successCallback);
 };
 
 const updateCurrentLocation = (accuracy) => {
