@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RNGeoSparkUtils {
+class RNGeoSparkUtils {
 
-    static String checkLocationPermission(boolean hasGranted) {
+    static String isGranted(boolean hasGranted) {
         if (hasGranted) {
             return "GRANTED";
         }
