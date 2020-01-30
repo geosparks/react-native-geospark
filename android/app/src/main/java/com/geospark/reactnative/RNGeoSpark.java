@@ -39,16 +39,6 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void checkLocationPermission(Callback callback) {
-        callback.invoke(RNGeoSparkUtils.checkLocationPermission(GeoSpark.checkLocationPermission(reactContext)));
-    }
-
-    @ReactMethod
-    public void checkLocationServices(Callback callback) {
-        callback.invoke(RNGeoSparkUtils.checkEnabled(GeoSpark.checkLocationServices(reactContext)));
-    }
-
-    @ReactMethod
     public void disableBatteryOptimization() {
         GeoSpark.disableBatteryOptimization(reactContext);
     }
@@ -59,8 +49,39 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isLocationTracking(Callback callback) {
-        callback.invoke(RNGeoSparkUtils.checkEnabled(GeoSpark.isLocationTracking(reactContext)));
+    public void checkMotionPermission(Callback callback) {
+        callback.invoke(RNGeoSparkUtils.isGranted(GeoSpark.checkActivityPermission(reactContext)));
+    }
+
+    @ReactMethod
+    public void checkLocationPermission(Callback callback) {
+        callback.invoke(RNGeoSparkUtils.isGranted(GeoSpark.checkLocationPermission(reactContext)));
+    }
+
+    @ReactMethod
+    public void checkLocationServices(Callback callback) {
+        callback.invoke(RNGeoSparkUtils.checkEnabled(GeoSpark.checkLocationServices(reactContext)));
+    }
+
+    @ReactMethod
+    public void checkBackgroundLocationPermission(Callback callback) {
+        callback.invoke(RNGeoSparkUtils.isGranted(GeoSpark.checkBackgroundLocationPermission(reactContext)));
+    }
+
+    @ReactMethod
+    public void requestMotionPermission() {
+        Activity activity = getCurrentActivity();
+        if (activity != null) {
+            GeoSpark.requestActivityPermission(activity);
+        }
+    }
+
+    @ReactMethod
+    public void requestBackgroundLocationPermission() {
+        Activity activity = getCurrentActivity();
+        if (activity != null) {
+            GeoSpark.requestBackgroundLocationPermission(activity);
+        }
     }
 
     @ReactMethod
@@ -77,6 +98,11 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
         if (activity != null) {
             GeoSpark.requestLocationServices(activity);
         }
+    }
+
+    @ReactMethod
+    public void isLocationTracking(Callback callback) {
+        callback.invoke(RNGeoSparkUtils.checkEnabled(GeoSpark.isLocationTracking(reactContext)));
     }
 
     @ReactMethod
@@ -108,6 +134,40 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
             public void onSuccess(GeoSparkUser geoSparkUser) {
                 WritableMap map = Arguments.createMap();
                 map.putString("userId", geoSparkUser.getUserId());
+                successCallback.invoke(map);
+            }
+
+            @Override
+            public void onFailure(GeoSparkError geoSparkError) {
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
+            }
+        });
+    }
+
+    @ReactMethod
+    public void toggleEvents(boolean geofence, boolean trip, boolean activity, final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.toggleEvents(reactContext, geofence, trip, activity, new GeoSparkEventsCallback() {
+            @Override
+            public void onSuccess(GeoSparkEvents geoSparkEvents) {
+                WritableMap map = Arguments.createMap();
+                map.putMap("events", RNGeoSparkUtils.mapForEvents(geoSparkEvents));
+                successCallback.invoke(map);
+            }
+
+            @Override
+            public void onFailure(GeoSparkError geoSparkError) {
+                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
+            }
+        });
+    }
+
+    @ReactMethod
+    public void getEventsStatus(final Callback successCallback, final Callback errorCallback) {
+        GeoSpark.getEventsStatus(reactContext, new GeoSparkEventsCallback() {
+            @Override
+            public void onSuccess(GeoSparkEvents geoSparkEvents) {
+                WritableMap map = Arguments.createMap();
+                map.putMap("events", RNGeoSparkUtils.mapForEvents(geoSparkEvents));
                 successCallback.invoke(map);
             }
 
@@ -210,40 +270,6 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
             public void onSuccess(List<GeoSparkActiveTrips> geoSparkActiveTrips) {
                 WritableMap map = Arguments.createMap();
                 map.putMap("activeTrips", RNGeoSparkUtils.mapForTripList(geoSparkActiveTrips));
-                successCallback.invoke(map);
-            }
-
-            @Override
-            public void onFailure(GeoSparkError geoSparkError) {
-                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
-            }
-        });
-    }
-
-    @ReactMethod
-    public void toggleEvents(boolean geofence, boolean trip, boolean activity, final Callback successCallback, final Callback errorCallback) {
-        GeoSpark.toggleEvents(reactContext, geofence, trip, activity, new GeoSparkEventsCallback() {
-            @Override
-            public void onSuccess(GeoSparkEvents geoSparkEvents) {
-                WritableMap map = Arguments.createMap();
-                map.putMap("events", RNGeoSparkUtils.mapForEvents(geoSparkEvents));
-                successCallback.invoke(map);
-            }
-
-            @Override
-            public void onFailure(GeoSparkError geoSparkError) {
-                errorCallback.invoke(RNGeoSparkUtils.mapForError(geoSparkError));
-            }
-        });
-    }
-
-    @ReactMethod
-    public void getEventsStatus(final Callback successCallback, final Callback errorCallback) {
-        GeoSpark.getEventsStatus(reactContext, new GeoSparkEventsCallback() {
-            @Override
-            public void onSuccess(GeoSparkEvents geoSparkEvents) {
-                WritableMap map = Arguments.createMap();
-                map.putMap("events", RNGeoSparkUtils.mapForEvents(geoSparkEvents));
                 successCallback.invoke(map);
             }
 
