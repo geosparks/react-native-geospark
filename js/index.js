@@ -30,8 +30,20 @@ const IOSType = {
  AlwaysOn: 'GSAlwaysOn'
 }
 
+const disableBatteryOptimization = () => {
+  NativeModules.RNGeoSpark.disableBatteryOptimization();
+};
+
+const isBatteryOptimizationEnabled = (callback) => {
+  NativeModules.RNGeoSpark.isBatteryOptimizationEnabled(callback);
+};
+
 const checkMotionPermission = (callback) => {
   NativeModules.RNGeoSpark.checkMotionPermission(callback);
+};
+
+const checkBackgroundLocationPermission = (callback) => {
+  NativeModules.RNGeoSpark.checkBackgroundLocationPermission(callback);
 };
 
 const checkLocationPermission = (callback) => {
@@ -46,20 +58,16 @@ const requestMotionPermission = () => {
   NativeModules.RNGeoSpark.requestMotionPermission();
 };
 
+const requestBackgroundLocationPermission = () => {
+  NativeModules.RNGeoSpark.requestBackgroundLocationPermission();
+};
+
 const requestLocationPermission = () => {
   NativeModules.RNGeoSpark.requestLocationPermission();
 };
 
 const requestLocationServices = () => {
   NativeModules.RNGeoSpark.requestLocationServices();
-};
-
-const disableBatteryOptimization = () => {
-  NativeModules.RNGeoSpark.disableBatteryOptimization();
-};
-
-const isBatteryOptimizationEnabled = (callback) => {
-  NativeModules.RNGeoSpark.isBatteryOptimizationEnabled(callback);
 };
 
 const isLocationTracking = (callback) => {
@@ -158,9 +166,11 @@ const GeoSpark = {
  Type,
  IOSType,
  checkMotionPermission,
+ checkBackgroundLocationPermission,
  checkLocationPermission,
  checkLocationServices,
  requestMotionPermission,
+ requestBackgroundLocationPermission,
  requestLocationPermission,
  requestLocationServices,
  disableBatteryOptimization,
