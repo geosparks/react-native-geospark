@@ -10,9 +10,9 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.geospark.lib.location.services.GeoSparkReceiver;
 import com.geospark.lib.model.GeoSparkError;
 import com.geospark.lib.model.GeoSparkUser;
+import com.geospark.lib.services.GeoSparkReceiver;
 
 
 public class RNGeoSparkReceiver extends GeoSparkReceiver {

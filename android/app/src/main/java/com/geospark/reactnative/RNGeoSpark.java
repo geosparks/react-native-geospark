@@ -12,18 +12,12 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
 import com.geospark.lib.callback.GeoSparkCallBack;
-import com.geospark.lib.callback.GeoSparkEventsCallback;
 import com.geospark.lib.callback.GeoSparkLocationCallback;
 import com.geospark.lib.callback.GeoSparkLogoutCallBack;
 import com.geospark.lib.callback.GeoSparkTripCallBack;
-import com.geospark.lib.callback.GeoSparkTripsCallBack;
-import com.geospark.lib.model.GeoSparkActiveTrips;
 import com.geospark.lib.model.GeoSparkError;
-import com.geospark.lib.model.GeoSparkEvents;
 import com.geospark.lib.model.GeoSparkTrip;
 import com.geospark.lib.model.GeoSparkUser;
-
-import java.util.List;
 
 public class RNGeoSpark extends ReactContextBaseJavaModule {
     ReactApplicationContext reactContext;
@@ -115,9 +109,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
         GeoSpark.createUser(reactContext, description, new GeoSparkCallBack() {
             @Override
             public void onSuccess(GeoSparkUser geoSparkUser) {
-                WritableMap map = Arguments.createMap();
-                map.putString("userId", geoSparkUser.getUserId());
-                successCallback.invoke(map);
+                successCallback.invoke(RNGeoSparkUtils.mapForUser(geoSparkUser));
             }
 
             @Override
@@ -132,9 +124,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
         GeoSpark.getUser(reactContext, userId, new GeoSparkCallBack() {
             @Override
             public void onSuccess(GeoSparkUser geoSparkUser) {
-                WritableMap map = Arguments.createMap();
-                map.putString("userId", geoSparkUser.getUserId());
-                successCallback.invoke(map);
+                successCallback.invoke(RNGeoSparkUtils.mapForUser(geoSparkUser));
             }
 
             @Override
@@ -146,12 +136,10 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void toggleEvents(boolean geofence, boolean trip, boolean activity, final Callback successCallback, final Callback errorCallback) {
-        GeoSpark.toggleEvents(reactContext, geofence, trip, activity, new GeoSparkEventsCallback() {
+        GeoSpark.toggleEvents(reactContext, geofence, trip, activity, new GeoSparkCallBack() {
             @Override
-            public void onSuccess(GeoSparkEvents geoSparkEvents) {
-                WritableMap map = Arguments.createMap();
-                map.putMap("events", RNGeoSparkUtils.mapForEvents(geoSparkEvents));
-                successCallback.invoke(map);
+            public void onSuccess(GeoSparkUser geoSparkUser) {
+                successCallback.invoke(RNGeoSparkUtils.mapForUser(geoSparkUser));
             }
 
             @Override
@@ -163,12 +151,10 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getEventsStatus(final Callback successCallback, final Callback errorCallback) {
-        GeoSpark.getEventsStatus(reactContext, new GeoSparkEventsCallback() {
+        GeoSpark.getEventsStatus(reactContext, new GeoSparkCallBack() {
             @Override
-            public void onSuccess(GeoSparkEvents geoSparkEvents) {
-                WritableMap map = Arguments.createMap();
-                map.putMap("events", RNGeoSparkUtils.mapForEvents(geoSparkEvents));
-                successCallback.invoke(map);
+            public void onSuccess(GeoSparkUser geoSparkUser) {
+                successCallback.invoke(RNGeoSparkUtils.mapForUser(geoSparkUser));
             }
 
             @Override
@@ -183,9 +169,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
         GeoSpark.setDescription(reactContext, description, new GeoSparkCallBack() {
             @Override
             public void onSuccess(GeoSparkUser geoSparkUser) {
-                WritableMap map = Arguments.createMap();
-                map.putString("userId", geoSparkUser.getUserId());
-                successCallback.invoke(map);
+                successCallback.invoke(RNGeoSparkUtils.mapForUser(geoSparkUser));
             }
 
             @Override
@@ -265,11 +249,11 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void activeTrips(final Callback successCallback, final Callback errorCallback) {
-        GeoSpark.activeTrips(reactContext, new GeoSparkTripsCallBack() {
+        GeoSpark.activeTrips(reactContext, new GeoSparkTripCallBack() {
             @Override
-            public void onSuccess(List<GeoSparkActiveTrips> geoSparkActiveTrips) {
+            public void onSuccess(GeoSparkTrip geoSparkTrip) {
                 WritableMap map = Arguments.createMap();
-                map.putMap("activeTrips", RNGeoSparkUtils.mapForTripList(geoSparkActiveTrips));
+                map.putMap("activeTrips", RNGeoSparkUtils.mapForTripList(geoSparkTrip.getGeoSparkActiveTrips()));
                 successCallback.invoke(map);
             }
 
