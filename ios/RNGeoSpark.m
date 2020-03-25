@@ -153,7 +153,7 @@ RCT_EXPORT_METHOD(resumeTrip:(NSString *)tripId :(RCTResponseSenderBlock)success
 
 RCT_EXPORT_METHOD(toggleEvents: (BOOL)geofence: (BOOL)trip: (BOOL)activity :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
   dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark toggleEventsWithGeofence:geofence Trip:trip Activity:activity :^(GeoSparkEvents * events) {
+    [GeoSpark toggleEventsWithGeofence:geofence Trip:trip Activity:activity :^(GeoSparkUser * events) {
       NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
       [dict setValue:[NSNumber numberWithBool:events.activityEvents]  forKey:@"activity"];
       [dict setValue:[NSNumber numberWithBool:events.tripsEvents]  forKey:@"trip"];
@@ -168,7 +168,7 @@ RCT_EXPORT_METHOD(toggleEvents: (BOOL)geofence: (BOOL)trip: (BOOL)activity :(RCT
 
 RCT_EXPORT_METHOD(getEventsStatus:(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
   dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark getEventsStatus:^(GeoSparkEvents * events) {
+    [GeoSpark getEventsStatus:^(GeoSparkUser * events) {
       NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
       [dict setValue:[NSNumber numberWithBool:events.activityEvents]  forKey:@"activity"];
       [dict setValue:[NSNumber numberWithBool:events.tripsEvents]  forKey:@"trip"];
