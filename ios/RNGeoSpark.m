@@ -206,6 +206,7 @@ RCT_EXPORT_METHOD(activeTrips :(RCTResponseSenderBlock)successCallback rejecter:
         NSMutableDictionary *trip = [[NSMutableDictionary alloc] init];
         trip[@"tripId"] = tripResponse.trip_id;
         trip[@"isStarted"] = @(tripResponse.isStarted);
+        trip[@"isPaused"] = @(tripResponse.isPaused);
         trip[@"isEnded"] = @(tripResponse.isEnded);
         trip[@"isDeleted"] = @(tripResponse.isDeleted);
         trip[@"createdAt"] = tripResponse.createdAt;
