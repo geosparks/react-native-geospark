@@ -41,6 +41,10 @@ RCT_EXPORT_METHOD(createUser:(NSString *)userDescription :(RCTResponseSenderBloc
     [GeoSpark createUser:userDescription :^(GeoSparkUser * user) {
       NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
       [dict setValue:user.userId  forKey:@"userId"];
+      [dict setValue:user.userDescription  forKey:@"userDescription"];
+      [dict setValue:[NSNumber numberWithBool:user.activityEvents]  forKey:@"activity"];
+      [dict setValue:[NSNumber numberWithBool:user.tripsEvents]  forKey:@"trip"];
+      [dict setValue:[NSNumber numberWithBool:user.geofenceEvents]  forKey:@"geofence"];
       NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
       successCallback(array);
     } onFailure:^(GeoSparkError * error) {
@@ -54,6 +58,10 @@ RCT_EXPORT_METHOD(getUser:(NSString *)userId :(RCTResponseSenderBlock)successCal
     [GeoSpark getUser:userId :^(GeoSparkUser * user) {
       NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
       [dict setValue:user.userId  forKey:@"userId"];
+      [dict setValue:user.userDescription  forKey:@"userDescription"];
+      [dict setValue:[NSNumber numberWithBool:user.activityEvents]  forKey:@"activity"];
+      [dict setValue:[NSNumber numberWithBool:user.tripsEvents]  forKey:@"trip"];
+      [dict setValue:[NSNumber numberWithBool:user.geofenceEvents]  forKey:@"geofence"];
       NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
       successCallback(array);
     } onFailure:^(GeoSparkError * error) {
@@ -67,6 +75,10 @@ RCT_EXPORT_METHOD(setDescription:(NSString *)userDescription :(RCTResponseSender
     [GeoSpark setDescription:userDescription :^(GeoSparkUser * user) {
       NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
       [dict setValue:user.userId  forKey:@"userId"];
+      [dict setValue:user.userDescription  forKey:@"userDescription"];
+      [dict setValue:[NSNumber numberWithBool:user.activityEvents]  forKey:@"activity"];
+      [dict setValue:[NSNumber numberWithBool:user.tripsEvents]  forKey:@"trip"];
+      [dict setValue:[NSNumber numberWithBool:user.geofenceEvents]  forKey:@"geofence"];
       NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
       successCallback(array);
     } onFailure:^(GeoSparkError * error) {
@@ -153,11 +165,13 @@ RCT_EXPORT_METHOD(resumeTrip:(NSString *)tripId :(RCTResponseSenderBlock)success
 
 RCT_EXPORT_METHOD(toggleEvents: (BOOL)geofence: (BOOL)trip: (BOOL)activity :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
   dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark toggleEventsWithGeofence:geofence Trip:trip Activity:activity :^(GeoSparkEvents * events) {
+    [GeoSpark toggleEventsWithGeofence:geofence Trip:trip Activity:activity :^(GeoSparkUser * user) {
       NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      [dict setValue:[NSNumber numberWithBool:events.activityEvents]  forKey:@"activity"];
-      [dict setValue:[NSNumber numberWithBool:events.tripsEvents]  forKey:@"trip"];
-      [dict setValue:[NSNumber numberWithBool:events.geofenceEvents]  forKey:@"geofence"];
+      [dict setValue:user.userId  forKey:@"userId"];
+      [dict setValue:user.userDescription  forKey:@"userDescription"];
+      [dict setValue:[NSNumber numberWithBool:user.activityEvents]  forKey:@"activity"];
+      [dict setValue:[NSNumber numberWithBool:user.tripsEvents]  forKey:@"trip"];
+      [dict setValue:[NSNumber numberWithBool:user.geofenceEvents]  forKey:@"geofence"];
       NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
       successCallback(array);
     } onFailure:^(GeoSparkError * error) {
@@ -168,11 +182,13 @@ RCT_EXPORT_METHOD(toggleEvents: (BOOL)geofence: (BOOL)trip: (BOOL)activity :(RCT
 
 RCT_EXPORT_METHOD(getEventsStatus:(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
   dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark getEventsStatus:^(GeoSparkEvents * events) {
+    [GeoSpark getEventsStatus:^(GeoSparkUser * user) {
       NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      [dict setValue:[NSNumber numberWithBool:events.activityEvents]  forKey:@"activity"];
-      [dict setValue:[NSNumber numberWithBool:events.tripsEvents]  forKey:@"trip"];
-      [dict setValue:[NSNumber numberWithBool:events.geofenceEvents]  forKey:@"geofence"];
+      [dict setValue:user.userId  forKey:@"userId"];
+      [dict setValue:user.userDescription  forKey:@"userDescription"];
+      [dict setValue:[NSNumber numberWithBool:user.activityEvents]  forKey:@"activity"];
+      [dict setValue:[NSNumber numberWithBool:user.tripsEvents]  forKey:@"trip"];
+      [dict setValue:[NSNumber numberWithBool:user.geofenceEvents]  forKey:@"geofence"];
       NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
       successCallback(array);
     } onFailure:^(GeoSparkError * error) {
@@ -190,6 +206,7 @@ RCT_EXPORT_METHOD(activeTrips :(RCTResponseSenderBlock)successCallback rejecter:
         NSMutableDictionary *trip = [[NSMutableDictionary alloc] init];
         trip[@"tripId"] = tripResponse.trip_id;
         trip[@"isStarted"] = @(tripResponse.isStarted);
+        trip[@"isPaused"] = @(tripResponse.isPaused);
         trip[@"isEnded"] = @(tripResponse.isEnded);
         trip[@"isDeleted"] = @(tripResponse.isDeleted);
         trip[@"createdAt"] = tripResponse.createdAt;
