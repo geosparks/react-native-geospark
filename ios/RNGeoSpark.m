@@ -243,9 +243,9 @@ RCT_EXPORT_METHOD(logout:(RCTResponseSenderBlock)successCallback rejecter:(RCTRe
   });
 }
 
-RCT_EXPORT_METHOD(accuracy:(NSInteger *)accuracy getCurrentLocation:(RCTResponseSenderBlock)successCallback){
+RCT_EXPORT_METHOD(getCurrentLocation:(RCTResponseSenderBlock)successCallback){
   dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark getCurrentLocation:*accuracy location:^(GSLocation * location) {
+    [GeoSpark getCurrentLocation:100 location:^(GSLocation * location) {
       NSMutableDictionary *locationDict = [[NSMutableDictionary alloc] init];
       [locationDict setValue:[NSNumber numberWithDouble:location.latitude]  forKey:@"latitude"];
       [locationDict setValue:[NSNumber numberWithDouble:location.longitude]  forKey:@"longitude"];
@@ -256,9 +256,9 @@ RCT_EXPORT_METHOD(accuracy:(NSInteger *)accuracy getCurrentLocation:(RCTResponse
   });
 }
 
-RCT_EXPORT_METHOD(accuracy:(NSInteger *)accuracy updateCurrentLocation:(RCTResponseSenderBlock)successCallback){
+RCT_EXPORT_METHOD(accuracy:(updateCurrentLocation:(RCTResponseSenderBlock)successCallback){
   dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark updateCurrentLocation:*accuracy];
+    [GeoSpark updateCurrentLocation:100];
   });
 }
 
