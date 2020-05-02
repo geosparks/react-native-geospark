@@ -256,7 +256,7 @@ RCT_EXPORT_METHOD(getCurrentLocation:(RCTResponseSenderBlock)successCallback){
   });
 }
 
-RCT_EXPORT_METHOD(accuracy:(updateCurrentLocation:(RCTResponseSenderBlock)successCallback){
+RCT_EXPORT_METHOD(updateCurrentLocation:(RCTResponseSenderBlock)successCallback){
   dispatch_async(dispatch_get_main_queue(), ^{
     [GeoSpark updateCurrentLocation:100];
   });
