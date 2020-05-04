@@ -134,9 +134,6 @@ const getCurrentLocationIos = (successCallback) => {
   NativeModules.RNGeoSpark.getCurrentLocation(successCallback);
 };
 
-const updateCurrentLocationIos = () => {
-  NativeModules.RNGeoSpark.updateCurrentLocation();
-};
 
 const updateCurrentLocation = (accuracy) => {
   NativeModules.RNGeoSpark.updateCurrentLocation(accuracy);
