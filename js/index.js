@@ -239,7 +239,7 @@ const stopSelfTracking = () => {
 };
 
 const startListener = (event, callback) => (
-  eventEmitter.addListener(event, callback)
+  eventEmitter.addListener(event, callback);
 );
 
 const stopListener = (event, callback) => {
