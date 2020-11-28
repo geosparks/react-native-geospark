@@ -166,7 +166,7 @@ const activeTrips = (offline,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.activeTrips(offline,successCallback,errorCallback);
 };
 
-const startTrackingMode = (trackingMode) => {
+const startTracking = (trackingMode) => {
   NativeModules.RNGeoSpark.startTracking(trackingMode);
 };
 
@@ -222,7 +222,7 @@ const locationPublisher = (enabled) => {
   NativeModules.RNGeoSpark.locationPublisher(enabled);
 }
 
-const startSelfTrackingMode = (trackingMode) => {
+const startSelfTracking = (trackingMode) => {
   NativeModules.RNGeoSpark.startSelfTracking(trackingMode);
 };
 
@@ -286,7 +286,7 @@ forceStopTrip,
 deleteTrip,
 syncTrip,
 activeTrips,
-startTrackingMode,
+startTracking,
 startTrackingTimeInterval,
 startTrackingDistanceInterval,
 stopTracking,
@@ -300,7 +300,7 @@ logout,
 setTrackingInAppState,
 offlineLocationTracking,
 locationPublisher,
-startSelfTrackingMode,
+startSelfTracking,
 startSelfTrackingTimeInterval,
 startSelfTrackingDistanceInterval,
 stopSelfTracking,
