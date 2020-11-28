@@ -25,19 +25,6 @@ const AppState = {
  BACKGROUND :'BACKGROUND',
 }
 
-const IOSType = {
- All: 'GSAll',
- Running: 'GSRunning',
- Walking: 'GSWalking',
- AutoMotive: 'GSAutoMotive',
- Stationary: 'GSStationary',
- Foreground: 'GSForeground',
- Terminated: 'GSTerminated',
- Background: 'GSBackground',
- AlwaysOn: 'GSAlwaysOn'
-}
-
-
 const createUser = (description,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.createUser(description,successCallback,errorCallback);
 };
@@ -90,12 +77,12 @@ const unSubscribeUserLocation = (userId) => {
   NativeModules.RNGeoSpark.unSubscribeUserLocation(userId);
 };
 
-const subscribeTripStatus = (userId) => {
-  NativeModules.RNGeoSpark.subscribeTripStatus(userId);
+const subscribeTripStatus = (tripId) => {
+  NativeModules.RNGeoSpark.subscribeTripStatus(tripId);
 };
 
-const unSubscribeTripStatus = (userId) => {
-  NativeModules.RNGeoSpark.unSubscribeTripStatus(userId);
+const unSubscribeTripStatus = (tripId) => {
+  NativeModules.RNGeoSpark.unSubscribeTripStatus(tripId);
 };
 
 const disableBatteryOptimization = () => {
@@ -116,6 +103,10 @@ const checkLocationServices = (callback) => {
 
 const checkBackgroundLocationPermission = (callback) => {
   NativeModules.RNGeoSpark.checkBackgroundLocationPermission(callback);
+};
+
+const locationPermissionStatus = (callback) => {
+  NativeModules.RNGeoSpark.locationPermissionStatus(callback);
 };
 
 const requestLocationPermission = () => {
@@ -277,6 +268,7 @@ checkBackgroundLocationPermission,
 requestLocationPermission,
 requestLocationServices,
 requestBackgroundLocationPermission,
+locationPermissionStatus,
 createTrip,
 startTrip,
 resumeTrip,
