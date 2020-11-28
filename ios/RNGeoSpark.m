@@ -9,7 +9,7 @@
 #import <GeoSpark/GeoSpark.h>
 
 @implementation RNGeoSpark{
-    BOOL hasListeners;
+  BOOL hasListeners;
 }
 RCT_EXTERN_METHOD(supportedEvents)
 RCT_EXPORT_MODULE();
@@ -35,254 +35,361 @@ RCT_EXPORT_MODULE();
   hasListeners = NO;
 }
 
-
+// Create User
 RCT_EXPORT_METHOD(createUser:(NSString *)userDescription :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark createUser:userDescription :^(GeoSparkUser * user) {
-      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      [dict setValue:user.userId  forKey:@"userId"];
-      [dict setValue:user.userDescription  forKey:@"userDescription"];
-      [dict setValue:[NSNumber numberWithBool:user.activityEvents]  forKey:@"activity"];
-      [dict setValue:[NSNumber numberWithBool:user.tripsEvents]  forKey:@"trip"];
-      [dict setValue:[NSNumber numberWithBool:user.geofenceEvents]  forKey:@"geofence"];
-      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
-      successCallback(array);
-    } onFailure:^(GeoSparkError * error) {
+  [GeoSpark createUser:userDescription handler:^(GeoSparkUser * user, GeoSparkError * error) {
+    if (error == nil) {
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self userData:user], nil];
+      successCallback(success);
+    }else{
       errorCallback([self error:error]);
-    }];
-  });
+    }
+  }];
 }
 
+// Get User
 RCT_EXPORT_METHOD(getUser:(NSString *)userId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark getUser:userId :^(GeoSparkUser * user) {
-      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      [dict setValue:user.userId  forKey:@"userId"];
-      [dict setValue:user.userDescription  forKey:@"userDescription"];
-      [dict setValue:[NSNumber numberWithBool:user.activityEvents]  forKey:@"activity"];
-      [dict setValue:[NSNumber numberWithBool:user.tripsEvents]  forKey:@"trip"];
-      [dict setValue:[NSNumber numberWithBool:user.geofenceEvents]  forKey:@"geofence"];
-      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
-      successCallback(array);
-    } onFailure:^(GeoSparkError * error) {
+  [GeoSpark getUser:userId handler:^(GeoSparkUser * user, GeoSparkError * error) {
+    if (error == nil) {
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self userData:user], nil];
+      successCallback(success);
+    }else{
       errorCallback([self error:error]);
-    }];
-  });
+    }
+  }];
 }
 
-RCT_EXPORT_METHOD(setDescription:(NSString *)userDescription :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark setDescription:userDescription :^(GeoSparkUser * user) {
-      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      [dict setValue:user.userId  forKey:@"userId"];
-      [dict setValue:user.userDescription  forKey:@"userDescription"];
-      [dict setValue:[NSNumber numberWithBool:user.activityEvents]  forKey:@"activity"];
-      [dict setValue:[NSNumber numberWithBool:user.tripsEvents]  forKey:@"trip"];
-      [dict setValue:[NSNumber numberWithBool:user.geofenceEvents]  forKey:@"geofence"];
-      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
-      successCallback(array);
-    } onFailure:^(GeoSparkError * error) {
+// Set Description User
+RCT_EXPORT_METHOD(setDescription:(NSString *)userDescription){
+  [GeoSpark setDescription:userDescription];
+}
+
+// toggle Events
+RCT_EXPORT_METHOD(toggleEvents:(BOOL)geofence trip:(BOOL)trip location:(BOOL)location movingGeofence:(BOOL)movingGeofence :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark toggleEventsWithGeofence:geofence Trip:trip Location:location MovingGeofence:movingGeofence handler:^(GeoSparkUser * user, GeoSparkError * error) {
+    if (error == nil) {
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self userData:user], nil];
+      successCallback(success);
+    }else{
       errorCallback([self error:error]);
-    }];
-  });
+    }
+  }];
 }
 
-RCT_EXPORT_METHOD(requestMotionPermission){
-  [GeoSpark requestMotion];
+// Toggle Listener
+RCT_EXPORT_METHOD(toggleEvents:(BOOL)location event:(BOOL)event :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark toggleListenerWithEvents:event Locations:event handler:^(GeoSparkUser * user, GeoSparkError * error) {
+    if (error == nil) {
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self userData:user], nil];
+      successCallback(success);
+    }else{
+      errorCallback([self error:error]);
+    }
+  }];
 }
 
+//getEvents Status
+RCT_EXPORT_METHOD(getEventsStatus:(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark getEventsStatusWithHandler:^(GeoSparkUser * user, GeoSparkError * error) {
+    if (error == nil) {
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self userData:user], nil];
+      successCallback(success);
+    }else{
+      errorCallback([self error:error]);
+    }
+  }];
+}
+
+// Get listener status
+RCT_EXPORT_METHOD(getListenerStatus:(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark getListenerStatusWithHandler:^(GeoSparkUser * user, GeoSparkError * error) {
+    if (error == nil) {
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self userData:user], nil];
+      successCallback(success);
+    }else{
+      errorCallback([self error:error]);
+    }
+  }];
+}
+
+// Logout
+RCT_EXPORT_METHOD(logout:(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark logoutUserWithHandler:^(NSString * status, GeoSparkError * error) {
+    if (status == nil){
+      errorCallback([self error:error]);
+    }else{
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self userLogout:status], nil];
+      successCallback(success);
+    }
+  }];
+  
+}
+
+// SubscribeEvents
+RCT_EXPORT_METHOD(subscribeEvents){
+  [GeoSpark subscribeEvents];
+}
+
+// unSubscribeEvents
+RCT_EXPORT_METHOD(unSubscribeEvents){
+  [GeoSpark unsubscribeEvents];
+}
+
+// subscribeLocation
+RCT_EXPORT_METHOD(subscribeLocation){
+  [GeoSpark subscribeLocation];
+}
+
+// unSubscribeLocation
+RCT_EXPORT_METHOD(unSubscribeLocation){
+  [GeoSpark unsubscribeLocation];
+}
+
+// subscribeUserLocation
+RCT_EXPORT_METHOD(subscribeUserLocation:(NSString *)userId ){
+  [GeoSpark subscribeUserLocation:userId];
+}
+
+// unSubscribeUserLocation
+RCT_EXPORT_METHOD(unSubscribeUserLocation:(NSString *)userId){
+  [GeoSpark unsubscribeUserLocation:userId];
+}
+
+// subscribeTripStatus
+RCT_EXPORT_METHOD(subscribeTripStatus:(NSString *)tripId){
+  [GeoSpark subscribeTripStatus:tripId];
+}
+
+// unSubscribeTripStatus
+RCT_EXPORT_METHOD(unSubscribeTripStatus:(NSString *)tripId){
+  [GeoSpark unsubscribeTripStatus:tripId];
+}
+
+// Start trip
+RCT_EXPORT_METHOD(startTrip:(NSString *)tripId description:(NSString *)tripDescription :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark startTrip:tripId :tripDescription handler:^(NSString * status, GeoSparkError * error) {
+    if (status != nil){
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self tripStatus:status], nil];
+      successCallback(success);
+    }else{
+      errorCallback([self error:error]);
+    }
+  }];
+}
+
+// Resume trip
+RCT_EXPORT_METHOD(resumeTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark resumeTrip:tripId handler:^(NSString * status, GeoSparkError * error) {
+    if (status != nil){
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self tripStatus:status], nil];
+      successCallback(success);
+    }else{
+      errorCallback([self error:error]);
+    }
+  }];
+}
+
+// Pause trip
+RCT_EXPORT_METHOD(pauseTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark pauseTrip:tripId handler:^(NSString * status, GeoSparkError * error) {
+    if (status != nil){
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self tripStatus:status], nil];
+      successCallback(success);
+    }else{
+      errorCallback([self error:error]);
+    }
+  }];
+}
+
+// Stop trip
+RCT_EXPORT_METHOD(stopTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark stopTrip:tripId handler:^(NSString * status, GeoSparkError * error) {
+    if (status != nil){
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self tripStatus:status], nil];
+      successCallback(success);
+    }else{
+      errorCallback([self error:error]);
+    }
+  }];
+}
+
+// ForceStop trip
+RCT_EXPORT_METHOD(forceStopTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark forceEndTrip:tripId handler:^(NSString * status, GeoSparkError * error) {
+    if (status != nil){
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self tripStatus:status], nil];
+      successCallback(success);
+    }else{
+      errorCallback([self error:error]);
+    }
+  }];
+}
+
+// Delete trip
+RCT_EXPORT_METHOD(deleteTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark deleteTrip:tripId handler:^(NSString * status, GeoSparkError * error) {
+    if (status != nil){
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self tripStatus:status], nil];
+      successCallback(success);
+    }else{
+      errorCallback([self error:error]);
+    }
+  }];
+}
+
+// Sync trip
+RCT_EXPORT_METHOD(syncTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark syncTrip:tripId handler:^(NSString * status, GeoSparkError * error) {
+    if (status != nil){
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self tripStatus:status], nil];
+      successCallback(success);
+    }else{
+      errorCallback([self error:error]);
+    }
+  }];
+}
+
+// Create trip
+// ["origin":[[longitude1,latitude1],[longitude2,latitude2]],"destinations":[[longitude1,latitude1]]]
+
+RCT_EXPORT_METHOD(createTrip:(BOOL)offline coordinate:(NSDictionary *)coordinate :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+   [GeoSpark createTrip:offline :coordinate handler:^(GeoSparkCreateTrip * trip, GeoSparkError * error) {
+     if (error == nil) {
+       NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self createTripResponse:trip], nil];
+       successCallback(success);
+     }else{
+       errorCallback([self error:error]);
+     }
+  }];
+}
+
+// Request Location
 RCT_EXPORT_METHOD(requestLocationPermission){
   [GeoSpark requestLocation];
 }
 
-RCT_EXPORT_METHOD(isLocationTracking){
-  [GeoSpark isLocationTracking];
+RCT_EXPORT_METHOD(checkLocationPermission:(RCTResponseSenderBlock)callback){
+  NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:[self checkPermission:[GeoSpark isLocationEnabled]], nil];
+  callback(array);
 }
 
-RCT_EXPORT_METHOD(checkLocationPermission :(RCTResponseSenderBlock)callback){
-  NSString *str = [self checkPermission:[GeoSpark isLocationEnabled]];
-  NSMutableArray *dict = [[NSMutableArray alloc] initWithObjects:str, nil];
-  callback(dict);
+RCT_EXPORT_METHOD(isLocationTracking:(RCTResponseSenderBlock)callback){
+  NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:[self checkPermission:[GeoSpark isLocationTracking]], nil];
+  callback(array);
 }
 
-RCT_EXPORT_METHOD(checkMotionPermission :(RCTResponseSenderBlock)callback){
-  NSString *str = [self checkPermission:[GeoSpark isMotionEnabled]];
-  NSMutableArray *dict = [[NSMutableArray alloc] initWithObjects:str, nil];
-  callback(dict);
+RCT_EXPORT_METHOD(locationPermissionStatusIOS:(RCTResponseSenderBlock)callback){
+  NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:[self locationPermissionValue:[GeoSpark locationPermissionStatus]], nil];
+  callback(array);
 }
 
-RCT_EXPORT_METHOD(startTrip:(NSString *)tripId trip:(NSString *)tripDes:(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [GeoSpark startTrip:tripId :@"" :^(GeoSparkTrip * trip) {
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-        [dict setValue:trip.msg  forKey:@"msg"];
-        NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
-        successCallback(array);
-      } onFailure:^(GeoSparkError * error) {
-        errorCallback([self error:error]);
-      }];
-    });
-}
+RCT_EXPORT_METHOD(getCurrentLocationIOS:(NSInteger)accuracy :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark getCurrentLocation:accuracy handler:^(CLLocation * location, GeoSparkError * error) {
+    if (error == nil) {
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self locationReponse:location], nil];
+      successCallback(success);
 
-RCT_EXPORT_METHOD(endTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark endTrip:tripId :^(GeoSparkTrip * trip) {
-      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      [dict setValue:trip.msg  forKey:@"msg"];
-      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
-      successCallback(array);
-    } onFailure:^(GeoSparkError * error) {
+    }else{
       errorCallback([self error:error]);
-    }];
-  });
+
+    }
+  }];
 }
 
-RCT_EXPORT_METHOD(pauseTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark pauseTrip:tripId :^(GeoSparkTrip * trip) {
-      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      [dict setValue:trip.msg  forKey:@"msg"];
-      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
-      successCallback(array);
-    } onFailure:^(GeoSparkError * error) {
-      errorCallback([self error:error]);
-    }];
-  });
+RCT_EXPORT_METHOD(updateCurrentLocationIOS:(NSInteger)accuracy){
+  [GeoSpark updateCurrentLocation:accuracy];
 }
 
-RCT_EXPORT_METHOD(resumeTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark resumeTrip:tripId :^(GeoSparkTrip * trip) {
-      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      [dict setValue:trip.msg  forKey:@"msg"];
-      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
-      successCallback(array);
-    } onFailure:^(GeoSparkError * error) {
-      errorCallback([self error:error]);
-    }];
-  });
+//Tracking
+// passive,reactive,active
+RCT_EXPORT_METHOD(startTracking:(NSString *)trackingMode){
+  if ([trackingMode  isEqual:@"PASSIVE"]) {
+    [GeoSpark startTracking:GeoSparkTrackingModePassive options:nil];
+  } else if ([trackingMode  isEqual:@"REACTIVE"]){
+    [GeoSpark startTracking:GeoSparkTrackingModeReactive options:nil];
+  } else{
+    [GeoSpark startTracking:GeoSparkTrackingModeActive options:nil];
+  }
 }
 
-RCT_EXPORT_METHOD(toggleEvents: (BOOL)geofence: (BOOL)trip: (BOOL)activity :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark toggleEventsWithGeofence:geofence Trip:trip Activity:activity :^(GeoSparkUser * user) {
-      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      [dict setValue:user.userId  forKey:@"userId"];
-      [dict setValue:user.userDescription  forKey:@"userDescription"];
-      [dict setValue:[NSNumber numberWithBool:user.activityEvents]  forKey:@"activity"];
-      [dict setValue:[NSNumber numberWithBool:user.tripsEvents]  forKey:@"trip"];
-      [dict setValue:[NSNumber numberWithBool:user.geofenceEvents]  forKey:@"geofence"];
-      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
-      successCallback(array);
-    } onFailure:^(GeoSparkError * error) {
-      errorCallback([self error:error]);
-    }];
-  });
+RCT_EXPORT_METHOD(startTrackingCustom:(BOOL)allowBackground pauseLocation:(BOOL)pauseLocation){
+  //MotionTrackingCustomMethods
+  GeoSparkTrackingCustomMethods *custom = [[GeoSparkTrackingCustomMethods alloc] init];
+  [GeoSpark startTracking:GeoSparkTrackingModeCustom options:custom];
 }
 
-RCT_EXPORT_METHOD(getEventsStatus:(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark getEventsStatus:^(GeoSparkUser * user) {
-      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      [dict setValue:user.userId  forKey:@"userId"];
-      [dict setValue:user.userDescription  forKey:@"userDescription"];
-      [dict setValue:[NSNumber numberWithBool:user.activityEvents]  forKey:@"activity"];
-      [dict setValue:[NSNumber numberWithBool:user.tripsEvents]  forKey:@"trip"];
-      [dict setValue:[NSNumber numberWithBool:user.geofenceEvents]  forKey:@"geofence"];
-      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
-      successCallback(array);
-    } onFailure:^(GeoSparkError * error) {
-      errorCallback([self error:error]);
-    }];
-  });
+// Self tracking
+RCT_EXPORT_METHOD(startSelfTracking:(NSString *)trackingMode){
+  if ([trackingMode  isEqual:@"PASSIVE"]) {
+    [GeoSpark startTracking:GeoSparkTrackingModePassive options:nil];
+  } else if ([trackingMode  isEqual:@"REACTIVE"]){
+    [GeoSpark startTracking:GeoSparkTrackingModeReactive options:nil];
+  } else{
+    [GeoSpark startTracking:GeoSparkTrackingModeActive options:nil];
+  }
 }
 
-
-RCT_EXPORT_METHOD(activeTrips :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-    [GeoSpark activeTrips:^(GeoSparkActiveTrips * trip) {
-      NSMutableArray *tripsArray = [[NSMutableArray alloc] init];
-      for (int i =0; i < [trip.trips count]; i++) {
-        ActiveTripsResponse *tripResponse = [trip.trips objectAtIndex:i];
-        NSMutableDictionary *trip = [[NSMutableDictionary alloc] init];
-        trip[@"tripId"] = tripResponse.trip_id;
-        trip[@"isStarted"] = @(tripResponse.isStarted);
-        trip[@"isPaused"] = @(tripResponse.isPaused);
-        trip[@"isEnded"] = @(tripResponse.isEnded);
-        trip[@"isDeleted"] = @(tripResponse.isDeleted);
-        trip[@"createdAt"] = tripResponse.createdAt;
-        trip[@"updatedAt"] = tripResponse.updatedAt;
-        [tripsArray addObject:trip];
-      }
-      NSDictionary *tripsData = [[NSDictionary alloc] initWithObjectsAndKeys:tripsArray,@"activeTrips", nil];
-      NSArray *outArray = [[NSArray alloc] initWithObjects:tripsData, nil];
-        successCallback(outArray);
-      
-    } onFailure:^(GeoSparkError * error) {
-     errorCallback([self error:error]);
-    }];
-}
-
-RCT_EXPORT_METHOD(startTracking){
-  [GeoSpark startTracking];
+RCT_EXPORT_METHOD(stopSelfTracking){
+  [GeoSpark stopSelfTracking];
 }
 
 RCT_EXPORT_METHOD(stopTracking){
   [GeoSpark stopTracking];
 }
 
-RCT_EXPORT_METHOD(logout:(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark logout:^(NSString * userId) {
-      NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-      [dict setValue:userId forKey:@"message"];
-      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:dict, nil];
-      successCallback(array);
-    } onFailure:^(GeoSparkError * error) {
-      errorCallback([self error:error]);
-    }];
-  });
-}
-
-RCT_EXPORT_METHOD(getCurrentLocation:(RCTResponseSenderBlock)successCallback){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark getCurrentLocation:100 location:^(GSLocation * location) {
-      NSMutableDictionary *locationDict = [[NSMutableDictionary alloc] init];
-      [locationDict setValue:[NSNumber numberWithDouble:location.latitude]  forKey:@"latitude"];
-      [locationDict setValue:[NSNumber numberWithDouble:location.longitude]  forKey:@"longitude"];
-      [locationDict setValue:[NSNumber numberWithDouble:location.accuracy]  forKey:@"accuracy"];
-      NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:locationDict, nil];
-      successCallback(array);
-    }];
-  });
-}
-
-RCT_EXPORT_METHOD(updateCurrentLocation:(NSNumber *)accuracy){
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [GeoSpark updateCurrentLocation:[accuracy intValue]];
-  });
-}
-
-RCT_EXPORT_METHOD(setTrackingInAppState:(NSArray *)states){
-  [GeoSpark trackLocationInAppState:states];
-}
-
-RCT_EXPORT_METHOD(setTrackingInMotion:(NSArray *)motions){
-  [GeoSpark trackLocationInMotion:motions];
-}
-
--(NSError *)error:(GeoSparkError *)error{
-  return [NSError errorWithDomain:error.errorMessage code:[self removeString:error.errorCode] userInfo:nil];
-}
-
--(NSString *)checkPermission:(BOOL)isEnabled{
-  if (isEnabled){
-    return @"GRANTED";
+RCT_EXPORT_METHOD(setTrackingInAppState:(NSString *)appState){
+  if ([appState  isEqual:@"ALWAYS_ON"]) {
+    [GeoSpark setTrackingInAppState:GeoSparkTrackingStateAlwaysOn];
+  } else if ([appState  isEqual:@"FOREGROUND"]){
+    [GeoSpark setTrackingInAppState:GeoSparkTrackingStateForeground];
   } else {
-    return @"DENIED";
+    [GeoSpark setTrackingInAppState:GeoSparkTrackingStateBackground];
   }
 }
 
--(NSInteger)removeString:(NSString *)stringValue{
+RCT_EXPORT_METHOD(offlineLocationTracking:(BOOL)offline){
+  [GeoSpark offlineLocationTracking:offline];
+}
+
+RCT_EXPORT_METHOD(locationPublisher:(BOOL)publisher){
+  [GeoSpark locationPublisher:publisher];
+}
+
+
+
+
+- (NSMutableDictionary *) userData:(GeoSparkUser *)user{
+  NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+  [dict setValue:user.userId forKey:@"userId"];
+  [dict setValue:user.userId forKey:@"description"];
+  [dict setValue:user.userId forKey:@"geofenceEvents"];
+  [dict setValue:user.userId forKey:@"locationEvents"];
+  [dict setValue:user.userId forKey:@"tripsEvents"];
+  [dict setValue:user.userId forKey:@"movingGeofenceEvents"];
+  [dict setValue:user.userId forKey:@"eventListenerStatus"];
+  [dict setValue:user.userId forKey:@"locationListenerStatus"];
+  return dict;
+}
+
+- (NSMutableDictionary *) userLogout:(NSString *)status{
+  NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+  [dict setValue:status forKey:@"message"];
+  return dict;
+}
+
+- (NSMutableDictionary *)tripStatus:(NSString *)string{
+  NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+  [dict setValue:string forKey:@"message"];
+  return dict;
+}
+
+- (NSError *)error:(GeoSparkError *)error{
+  return [NSError errorWithDomain:error.message code:[self removeString:error.code] userInfo:nil];
+}
+
+// Removing GS from error code
+
+- (NSInteger)removeString:(NSString *)stringValue{
   NSMutableString *strippedString = [NSMutableString stringWithCapacity:stringValue.length];
   NSScanner *scanner = [NSScanner scannerWithString:stringValue];
   NSCharacterSet *numbers = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
@@ -297,4 +404,100 @@ RCT_EXPORT_METHOD(setTrackingInMotion:(NSArray *)motions){
   return @([strippedString integerValue]);
 }
 
+- (NSString *)checkPermission:(BOOL)isEnabled{
+  if (isEnabled){
+    return @"GRANTED";
+  } else {
+    return @"DENIED";
+  }
+}
+
+- (NSString *)locationPermissionValue:(NSInteger) value{
+  if (value == 0){
+    return @"notDetermined";
+  }else if (value == 1){
+    return @"restricted";
+  }else if (value == 2){
+    return @"denied";
+  }else if (value == 3){
+    return @"always";
+  }else{
+    return @"whenInUse";
+  }
+}
+
+- (NSMutableDictionary *) createTripResponse:(GeoSparkCreateTrip *)trip{
+  NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+  [dict setValue:trip.tripId forKey:@"id"];
+  [dict setValue:trip.userId forKey:@"userId"];
+  [dict setValue:trip.createdAt forKey:@"createdAt"];
+  [dict setValue:trip.updatedAt forKey:@"updatedAt"];
+  [dict setValue:[NSNumber numberWithBool:trip.isStarted] forKey:@"isStarted"];
+  [dict setValue:[NSNumber numberWithBool:trip.isEnded] forKey:@"isEnded"];
+  [dict setValue:[NSNumber numberWithBool:trip.isDeleted] forKey:@"isDeleted"];
+  [dict setValue:trip.tripTrackingUrl forKey:@"tripTrackingUrl"];
+  
+  if (trip.origins.count != 0){
+    NSMutableArray *originArray = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i <= trip.origins.count; i++)
+    {
+      NSMutableDictionary *originDict = [[NSMutableDictionary alloc] init];
+      GeoSparkTripOrigin *origin = [trip.origins objectAtIndex:i];
+      [originDict setValue:origin.id forKey:@"id"];
+      [originDict setValue:origin.tripId forKey:@"tripId"];
+      [originDict setValue:origin.createdAt forKey:@"createdAt"];
+      [originDict setValue:origin.updatedAt forKey:@"updatedAt"];
+      if (origin.coordinates.count != 0){
+        [originDict setValue:origin.coordinates.firstObject forKey:@"latitude"];
+        [originDict setValue:origin.coordinates.lastObject forKey:@"longitude"];
+      }
+      [originDict setValue:origin.locType forKey:@"type"];
+      [originDict setValue:[NSNumber numberWithBool:origin.reached] forKey:@"reached"];
+      [originArray addObject:originDict];
+    }
+    if (originArray.count != 0) {
+      [dict setObject:originArray forKey:@"origin"];
+    }
+
+  }
+  if (trip.destinations.count != 0){
+    NSMutableArray *destinationArray = [[NSMutableArray alloc] init];
+      
+      for (int i = 0; i <= trip.destinations.count; i++)
+      {
+        NSMutableDictionary *originDict = [[NSMutableDictionary alloc] init];
+        GeoSparkTripDestination *destination = [trip.destinations objectAtIndex:i];
+        [originDict setValue:destination.id forKey:@"id"];
+        [originDict setValue:destination.tripId forKey:@"tripId"];
+        [originDict setValue:destination.createdAt forKey:@"createdAt"];
+        [originDict setValue:destination.updatedAt forKey:@"updatedAt"];
+        if (destination.coordinates.count != 0){
+          [originDict setValue:destination.coordinates.firstObject forKey:@"latitude"];
+          [originDict setValue:destination.coordinates.lastObject forKey:@"longitude"];
+        }
+        [originDict setValue:destination.locType forKey:@"type"];
+        [originDict setValue:[NSNumber numberWithBool:destination.reached] forKey:@"reached"];
+        [destinationArray addObject:originDict];
+      }
+    
+      if (destinationArray.count != 0) {
+        [dict setObject:destinationArray forKey:@"destination"];
+      }
+  }
+  
+  return dict;
+}
+
+- (NSMutableDictionary *)locationReponse:(CLLocation *)location{
+  NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+  [dict setValue:[NSNumber numberWithDouble:location.coordinate.latitude] forKey:@"latitude"];
+  [dict setValue:[NSNumber numberWithDouble:location.coordinate.longitude] forKey:@"longitude"];
+  [dict setValue:[NSNumber numberWithDouble:location.horizontalAccuracy] forKey:@"accuracy"];
+  [dict setValue:[NSNumber numberWithDouble:location.altitude] forKey:@"altitude"];
+  [dict setValue:[NSNumber numberWithDouble:location.speed] forKey:@"speed"];
+  return  dict;
+}
+
 @end
+
