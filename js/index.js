@@ -267,7 +267,7 @@ const stopListener = (event, callback) => {
 };
 
 const GeoSpark = {
-GeoSparkTrackingMode,
+TrackingMode,
 DesiredAccuracy,
 AppState,
 DesiredAccuracyIOS,
