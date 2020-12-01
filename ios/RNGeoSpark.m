@@ -340,6 +340,12 @@ RCT_EXPORT_METHOD(startSelfTracking:(NSString *)trackingMode){
   }
 }
 
+RCT_EXPORT_METHOD(startSelfTrackingCustom:(BOOL)allowBackground pauseAutomatic:(BOOL)pauseAutomatic activityType:(NSString *)activityType desiredAccuracy:(NSString *)desiredAccuracy showBackIndicator:(BOOL)showBackIndicator distanceFilter:(NSInteger)distanceFilter){
+  GeoSparkTrackingCustomMethodsObjcWrapper *wrapper = [[GeoSparkTrackingCustomMethodsObjcWrapper alloc] init];
+  [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:NULL showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:NULL useRegionMonitoring:NULL useDynamicGeofencRadius:NULL geofenceRadius:NULL allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:NULL];
+}
+
+
 RCT_EXPORT_METHOD(stopSelfTracking){
   [GeoSpark stopSelfTracking];
 }

@@ -178,6 +178,13 @@ const startTracking = (trackingMode) => {
   NativeModules.RNGeoSpark.startTracking(trackingMode);
 };
 
+const startTrackingCustom = (allowBackground,pauseAutomatic,activityType,desiredAccuracy,showBackIndicator,distanceFilter) => {
+  NativeModules.RNGeoSpark.startTrackingCustom(allowBackground,pauseAutomatic,activityType,desiredAccuracy,showBackIndicator,distanceFilter);
+};
+
+const startSelfTrackingCustom = (allowBackground,pauseAutomatic,activityType,desiredAccuracy,showBackIndicator,distanceFilter) => {
+  NativeModules.RNGeoSpark.startSelfTrackingCustom(allowBackground,pauseAutomatic,activityType,desiredAccuracy,showBackIndicator,distanceFilter);
+};
 const startTrackingTimeInterval = (timeInterval,desiredAccuracy) => {
   NativeModules.RNGeoSpark.startTracking(timeInterval,desiredAccuracy);
 };
@@ -262,6 +269,8 @@ const GeoSpark = {
 GeoSparkTrackingMode,
 DesiredAccuracy,
 AppState,
+DesiredAccuracyIOS,
+ActivityType,
 createUser,
 getUser,
 setDescription,
@@ -296,6 +305,8 @@ deleteTrip,
 syncTrip,
 activeTrips,
 startTracking,
+startTrackingCustom,
+startSelfTrackingCustom,
 startTrackingTimeInterval,
 startTrackingDistanceInterval,
 stopTracking,
