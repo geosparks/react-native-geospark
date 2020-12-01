@@ -25,6 +25,23 @@ const AppState = {
  BACKGROUND :'BACKGROUND',
 }
 
+const DesiredAccuracyIOS = {
+  BESTFORNAVIGATION:'BESTFORNAVIGATION',
+  BEST:'BEST',
+  NEAREST_TEN_METERS:'NEAREST_TEN_METERS',
+  HUNDRED_METERS:'HUNDRED_METERS',
+  KILO_METERS:'KILO_METERS',
+  THREE_KILOMETERS:'THREE_KILOMETERS',
+ }
+
+ const ActivityType = {
+  OTHER:'OTHER',
+  AUTO_NAVIGATION:'AUTO_NAVIGATION',
+  OTHER_NAVIGATION:'OTHER_NAVIGATION',
+  FITNESS:'FITNESS',
+ }
+
+
 const createUser = (description,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.createUser(description,successCallback,errorCallback);
 };

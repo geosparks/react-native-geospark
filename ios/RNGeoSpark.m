@@ -323,10 +323,10 @@ RCT_EXPORT_METHOD(startTracking:(NSString *)trackingMode){
   }
 }
 
-RCT_EXPORT_METHOD(startTrackingCustom:(BOOL)allowBackground pauseLocation:(BOOL)pauseLocation){
-  //MotionTrackingCustomMethods
-  GeoSparkTrackingCustomMethods *custom = [[GeoSparkTrackingCustomMethods alloc] init];
-  [GeoSpark startTracking:GeoSparkTrackingModeCustom options:custom];
+// Custom Tracking
+RCT_EXPORT_METHOD(startTrackingCustom:(BOOL)allowBackground pauseAutomatic:(BOOL)pauseAutomatic activityType:(NSString *)activityType desiredAccuracy:(NSString *)desiredAccuracy showBackIndicator:(BOOL)showBackIndicator distanceFilter:(NSInteger)distanceFilter){
+  GeoSparkTrackingCustomMethodsObjcWrapper *wrapper = [[GeoSparkTrackingCustomMethodsObjcWrapper alloc] init];
+  [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:NULL showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:NULL useRegionMonitoring:NULL useDynamicGeofencRadius:NULL geofenceRadius:NULL allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:NULL];
 }
 
 // Self tracking
@@ -526,4 +526,52 @@ RCT_EXPORT_METHOD(locationPublisher:(BOOL)publisher){
   return  tripsArray;
 }
 
+-(LocationAccuracy)getDesireAccuracy:(NSString *)accuracy{
+  if ([accuracy  isEqual: @"BESTFORNAVIGATION"]) {
+    return LocationAccuracyKCLLocationAccuracyBestForNavigation;
+  }else if ([accuracy  isEqual: @"BEST"]){
+    return LocationAccuracyKCLLocationAccuracyBest;
+  }else if ([accuracy  isEqual: @"NEAREST_TEN_METERS"]){
+    return LocationAccuracyKCLLocationAccuracyHundredMeters;
+  }else if ([accuracy  isEqual: @"HUNDRED_METERS"]){
+    return  LocationAccuracyKCLLocationAccuracyHundredMeters;
+  }else if ([accuracy  isEqual: @"KILO_METERS"]){
+    return  LocationAccuracyKCLLocationAccuracyKilometer;
+  }else if ([accuracy  isEqual: @"THREE_KILOMETERS"]){
+     return  LocationAccuracyKCLLocationAccuracyThreeKilometers;
+  }else{
+    return NULL;
+  }
+}
+
+-(CLActivityType)getActivityType:(NSString *)type{
+  if ([type  isEqual: @"OTHER"]) {
+    return CLActivityTypeOther;
+  }else if ([type  isEqual: @"AUTO_NAVIGATION"]){
+    return CLActivityTypeAutomotiveNavigation;
+  }else if ([type  isEqual: @"OTHER_NAVIGATION"]){
+    return CLActivityTypeOtherNavigation;
+  }else if ([type isEqual:@"FITNESS"]){
+    return CLActivityTypeFitness;
+  }else {
+    return NULL;
+  }
+}
 @end
+
+
+//const DesiredAccuracyIOS = {
+// BESTFORNAVIGATION:'BESTFORNAVIGATION',
+// BEST:'BEST',
+// NEAREST_TEN_METERS:'NEAREST_TEN_METERS',
+// HUNDRED_METERS:'HUNDRED_METERS',
+// KILO_METERS:'KILO_METERS',
+// THREE_KILOMETERS:'THREE_KILOMETERS',
+//}
+//
+//const ActivityType = {
+// OTHER:'OTHER',
+// AUTO_NAVIGATION:'AUTO_NAVIGATION',
+// OTHER_NAVIGATION:'OTHER_NAVIGATION',
+// FITNESS:'FITNESS',
+//}
