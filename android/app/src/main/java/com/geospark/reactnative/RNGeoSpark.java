@@ -1,20 +1,13 @@
 package com.geospark.reactnative;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.location.Location;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
-
-import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
 import com.geospark.lib.GeoSparkTrackingMode;
@@ -23,21 +16,13 @@ import com.geospark.lib.callback.GeoSparkCallback;
 import com.geospark.lib.callback.GeoSparkCreateTripCallback;
 import com.geospark.lib.callback.GeoSparkDeleteTripCallback;
 import com.geospark.lib.callback.GeoSparkLocationCallback;
-
 import com.geospark.lib.callback.GeoSparkLogoutCallback;
 import com.geospark.lib.callback.GeoSparkSyncTripCallback;
 import com.geospark.lib.callback.GeoSparkTripCallback;
-import com.geospark.lib.callback.GeoSparkTripDetailCallback;
-import com.geospark.lib.callback.GeoSparkTripStatusCallback;
-import com.geospark.lib.callback.GeoSparkTripSummaryCallback;
-import com.geospark.lib.models.ActiveTrips;
 import com.geospark.lib.models.GeoSparkError;
 import com.geospark.lib.models.GeoSparkTrip;
 import com.geospark.lib.models.GeoSparkUser;
 import com.geospark.lib.models.createtrip.GeoSparkCreateTrip;
-
-import java.util.List;
-import java.util.Map;
 
 public class RNGeoSpark extends ReactContextBaseJavaModule {
     ReactApplicationContext reactContext;
@@ -252,7 +237,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startTracking(int timeInterval, String desiredAccuracy) {
+    public void startTrackingTimeInterval(int timeInterval, String desiredAccuracy) {
         GeoSparkTrackingMode.Builder builder = new GeoSparkTrackingMode.Builder(timeInterval);
         switch (desiredAccuracy) {
             case "MEDIUM":
@@ -269,7 +254,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startTracking(int distance, int stationary, String desiredAccuracy) {
+    public void startTrackingDistanceInterval(int distance, int stationary, String desiredAccuracy) {
         GeoSparkTrackingMode.Builder builder = new GeoSparkTrackingMode.Builder(distance, stationary);
         switch (desiredAccuracy) {
             case "MEDIUM":
@@ -561,7 +546,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startSelfTracking(int timeInterval, String desiredAccuracy) {
+    public void startSelfTrackingTimeInterval(int timeInterval, String desiredAccuracy) {
         GeoSparkTrackingMode.Builder builder = new GeoSparkTrackingMode.Builder(timeInterval);
         switch (desiredAccuracy) {
             case "MEDIUM":
@@ -578,7 +563,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startSelfTracking(int distance, int stationary, String desiredAccuracy) {
+    public void startSelfTrackingDistanceInterval(int distance, int stationary, String desiredAccuracy) {
         GeoSparkTrackingMode.Builder builder = new GeoSparkTrackingMode.Builder(distance, stationary);
         switch (desiredAccuracy) {
             case "MEDIUM":

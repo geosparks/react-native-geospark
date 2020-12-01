@@ -3,9 +3,7 @@ package com.geospark.reactnative;
 import android.location.Location;
 
 import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
-import com.geospark.lib.GeoSpark;
 import com.geospark.lib.models.ActiveTrips;
 import com.geospark.lib.models.GeoSparkError;
 import com.geospark.lib.models.GeoSparkUser;
@@ -14,7 +12,6 @@ import com.geospark.lib.models.createtrip.Destination;
 import com.geospark.lib.models.createtrip.GeoSparkCreateTrip;
 import com.geospark.lib.models.createtrip.Origin;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
