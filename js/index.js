@@ -214,12 +214,12 @@ const updateCurrentLocation = (desiredAccuracy,accuracy) => {
   NativeModules.RNGeoSpark.updateCurrentLocation(desiredAccuracy,accuracy);
 };
 
-const getCurrentLocationIos = (successCallback) => {
-  NativeModules.RNGeoSpark.getCurrentLocation(successCallback);
+const getCurrentLocationIos = (accuracy,successCallback,errorCallback) => {
+  NativeModules.RNGeoSpark.getCurrentLocationIos(accuracy,successCallback,errorCallback);
 };
 
-const updateCurrentLocationIos = () => {
-  NativeModules.RNGeoSpark.updateCurrentLocation();
+const updateCurrentLocationIos = (accuracy) => {
+  NativeModules.RNGeoSpark.updateCurrentLocationIos(accuracy);
 };
 
 const logout = (successCallback,errorCallback) => {
