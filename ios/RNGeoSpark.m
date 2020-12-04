@@ -338,6 +338,7 @@ RCT_EXPORT_METHOD(startTrackingCustom:(BOOL)allowBackground pauseAutomatic:(BOOL
   dispatch_async(dispatch_get_main_queue(), ^{
     GeoSparkTrackingCustomMethodsObjcWrapper *wrapper = [[GeoSparkTrackingCustomMethodsObjcWrapper alloc] init];
     [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:nil showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:nil useRegionMonitoring:nil useDynamicGeofencRadius:nil geofenceRadius:nil allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:nil];
+    [GeoSpark startTracking:GeoSparkTrackingModeCustom options:wrapper.customMethods];
   });
 }
 
@@ -358,7 +359,7 @@ RCT_EXPORT_METHOD(startSelfTrackingCustom:(BOOL)allowBackground pauseAutomatic:(
   dispatch_async(dispatch_get_main_queue(), ^{
     GeoSparkTrackingCustomMethodsObjcWrapper *wrapper = [[GeoSparkTrackingCustomMethodsObjcWrapper alloc] init];
     [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:nil showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:nil useRegionMonitoring:nil useDynamicGeofencRadius:nil geofenceRadius:nil allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:nil];
-    
+     [GeoSpark startTracking:GeoSparkTrackingModeCustom options:wrapper.customMethods];
   });
 }
 
