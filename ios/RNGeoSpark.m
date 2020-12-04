@@ -118,7 +118,7 @@ RCT_EXPORT_METHOD(logout:(RCTResponseSenderBlock)successCallback rejecter:(RCTRe
     if (error == nil){
       NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self userLogout:status], nil];
       successCallback(success);
-
+      
     }else{
       errorCallback([self error:error]);
     }
@@ -168,14 +168,16 @@ RCT_EXPORT_METHOD(unSubscribeTripStatus:(NSString *)tripId){
 
 // Start trip
 RCT_EXPORT_METHOD(startTrip:(NSString *)tripId description:(NSString *)tripDescription :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  [GeoSpark startTrip:tripId :tripDescription handler:^(NSString * status, GeoSparkError * error) {
-    if (error == nil){
-      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self tripStatus:status], nil];
-      successCallback(success);
-    }else{
-      errorCallback([self error:error]);
-    }
-  }];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [GeoSpark startTrip:tripId :tripDescription handler:^(NSString * status, GeoSparkError * error) {
+      if (error == nil){
+        NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self tripStatus:status], nil];
+        successCallback(success);
+      }else{
+        errorCallback([self error:error]);
+      }
+    }];
+  });
 }
 
 // Resume trip
@@ -253,14 +255,14 @@ RCT_EXPORT_METHOD(syncTrip:(NSString *)tripId :(RCTResponseSenderBlock)successCa
 // Create trip
 // ["origin":[[longitude1,latitude1],[longitude2,latitude2]],"destinations":[[longitude1,latitude1]]]
 
-RCT_EXPORT_METHOD(createTrip:(BOOL)offline coordinate:(NSDictionary *)coordinate :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-   [GeoSpark createTrip:offline :coordinate handler:^(GeoSparkCreateTrip * trip, GeoSparkError * error) {
-     if (error == nil) {
-       NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self createTripResponse:trip], nil];
-       successCallback(success);
-     }else{
-       errorCallback([self error:error]);
-     }
+RCT_EXPORT_METHOD(createTrip:(BOOL)offline :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
+  [GeoSpark createTrip:offline :nil handler:^(GeoSparkCreateTrip * trip, GeoSparkError * error) {
+    if (error == nil) {
+      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self createTripResponse:trip], nil];
+      successCallback(success);
+    }else{
+      errorCallback([self error:error]);
+    }
   }];
 }
 
@@ -276,7 +278,9 @@ RCT_EXPORT_METHOD(activeTrips:(BOOL)offline:(RCTResponseSenderBlock)successCallb
 
 // Request Location
 RCT_EXPORT_METHOD(requestLocationPermission){
-  [GeoSpark requestLocation];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [GeoSpark requestLocation];
+  });
 }
 
 RCT_EXPORT_METHOD(checkLocationPermission:(RCTResponseSenderBlock)callback){
@@ -295,63 +299,80 @@ RCT_EXPORT_METHOD(locationPermissionStatus:(RCTResponseSenderBlock)callback){
 }
 
 RCT_EXPORT_METHOD(getCurrentLocationIos:(NSInteger)accuracy :(RCTResponseSenderBlock)successCallback rejecter:(RCTResponseErrorBlock)errorCallback){
-  [GeoSpark getCurrentLocation:accuracy handler:^(CLLocation * location, GeoSparkError * error) {
-    if (error == nil) {
-      NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self locationReponse:location], nil];
-      successCallback(success);
-
-    }else{
-      errorCallback([self error:error]);
-
-    }
-  }];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [GeoSpark getCurrentLocation:accuracy handler:^(CLLocation * location, GeoSparkError * error) {
+      if (error == nil) {
+        NSMutableArray *success = [[NSMutableArray alloc] initWithObjects:[self locationReponse:location], nil];
+        successCallback(success);
+        
+      }else{
+        errorCallback([self error:error]);
+        
+      }
+    }];
+  });
 }
 
 RCT_EXPORT_METHOD(updateCurrentLocationIos:(NSInteger)accuracy){
-  [GeoSpark updateCurrentLocation:accuracy];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [GeoSpark updateCurrentLocation:accuracy];
+  });
 }
 
 //Tracking
 // passive,reactive,active
 RCT_EXPORT_METHOD(startTracking:(NSString *)trackingMode){
-  if ([trackingMode  isEqual:@"PASSIVE"]) {
-    [GeoSpark startTracking:GeoSparkTrackingModePassive options:nil];
-  } else if ([trackingMode  isEqual:@"REACTIVE"]){
-    [GeoSpark startTracking:GeoSparkTrackingModeReactive options:nil];
-  } else{
-    [GeoSpark startTracking:GeoSparkTrackingModeActive options:nil];
-  }
+  dispatch_async(dispatch_get_main_queue(), ^{
+    if ([trackingMode  isEqual:@"PASSIVE"]) {
+      [GeoSpark startTracking:GeoSparkTrackingModePassive options:nil];
+    } else if ([trackingMode  isEqual:@"REACTIVE"]){
+      [GeoSpark startTracking:GeoSparkTrackingModeReactive options:nil];
+    } else{
+      [GeoSpark startTracking:GeoSparkTrackingModeActive options:nil];
+    }
+  });
 }
 
 // Custom Tracking
 RCT_EXPORT_METHOD(startTrackingCustom:(BOOL)allowBackground pauseAutomatic:(BOOL)pauseAutomatic activityType:(NSString *)activityType desiredAccuracy:(NSString *)desiredAccuracy showBackIndicator:(BOOL)showBackIndicator distanceFilter:(NSInteger)distanceFilter){
-  GeoSparkTrackingCustomMethodsObjcWrapper *wrapper = [[GeoSparkTrackingCustomMethodsObjcWrapper alloc] init];
-  [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:NULL showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:NULL useRegionMonitoring:NULL useDynamicGeofencRadius:NULL geofenceRadius:NULL allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:NULL];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    GeoSparkTrackingCustomMethodsObjcWrapper *wrapper = [[GeoSparkTrackingCustomMethodsObjcWrapper alloc] init];
+    [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:nil showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:nil useRegionMonitoring:nil useDynamicGeofencRadius:nil geofenceRadius:nil allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:nil];
+  });
 }
 
 // Self tracking
 RCT_EXPORT_METHOD(startSelfTracking:(NSString *)trackingMode){
-  if ([trackingMode  isEqual:@"PASSIVE"]) {
-    [GeoSpark startTracking:GeoSparkTrackingModePassive options:nil];
-  } else if ([trackingMode  isEqual:@"REACTIVE"]){
-    [GeoSpark startTracking:GeoSparkTrackingModeReactive options:nil];
-  } else{
-    [GeoSpark startTracking:GeoSparkTrackingModeActive options:nil];
-  }
+  dispatch_async(dispatch_get_main_queue(), ^{
+    if ([trackingMode  isEqual:@"PASSIVE"]) {
+      [GeoSpark startTracking:GeoSparkTrackingModePassive options:nil];
+    } else if ([trackingMode  isEqual:@"REACTIVE"]){
+      [GeoSpark startTracking:GeoSparkTrackingModeReactive options:nil];
+    } else{
+      [GeoSpark startTracking:GeoSparkTrackingModeActive options:nil];
+    }
+  });
 }
 
 RCT_EXPORT_METHOD(startSelfTrackingCustom:(BOOL)allowBackground pauseAutomatic:(BOOL)pauseAutomatic activityType:(NSString *)activityType desiredAccuracy:(NSString *)desiredAccuracy showBackIndicator:(BOOL)showBackIndicator distanceFilter:(NSInteger)distanceFilter){
-  GeoSparkTrackingCustomMethodsObjcWrapper *wrapper = [[GeoSparkTrackingCustomMethodsObjcWrapper alloc] init];
-  [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:NULL showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:NULL useRegionMonitoring:NULL useDynamicGeofencRadius:NULL geofenceRadius:NULL allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:NULL];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    GeoSparkTrackingCustomMethodsObjcWrapper *wrapper = [[GeoSparkTrackingCustomMethodsObjcWrapper alloc] init];
+    [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:nil showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:nil useRegionMonitoring:nil useDynamicGeofencRadius:nil geofenceRadius:nil allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:nil];
+    
+  });
 }
 
 
 RCT_EXPORT_METHOD(stopSelfTracking){
-  [GeoSpark stopSelfTracking];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [GeoSpark stopSelfTracking];
+  });
 }
 
 RCT_EXPORT_METHOD(stopTracking){
-  [GeoSpark stopTracking];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [GeoSpark stopTracking];
+  });
 }
 
 RCT_EXPORT_METHOD(setTrackingInAppState:(NSString *)appState){
@@ -455,7 +476,7 @@ RCT_EXPORT_METHOD(locationPublisher:(BOOL)publisher){
   if (trip.origins.count != 0){
     NSMutableArray *originArray = [[NSMutableArray alloc] init];
     
-    for (int i = 0; i <= trip.origins.count; i++)
+    for (int i = 0; i < trip.origins.count; i++)
     {
       NSMutableDictionary *originDict = [[NSMutableDictionary alloc] init];
       GeoSparkTripOrigin *origin = [trip.origins objectAtIndex:i];
@@ -474,31 +495,31 @@ RCT_EXPORT_METHOD(locationPublisher:(BOOL)publisher){
     if (originArray.count != 0) {
       [dict setObject:originArray forKey:@"origin"];
     }
-
+    
   }
   if (trip.destinations.count != 0){
     NSMutableArray *destinationArray = [[NSMutableArray alloc] init];
-      
-      for (int i = 0; i <= trip.destinations.count; i++)
-      {
-        NSMutableDictionary *originDict = [[NSMutableDictionary alloc] init];
-        GeoSparkTripDestination *destination = [trip.destinations objectAtIndex:i];
-        [originDict setValue:destination.id forKey:@"id"];
-        [originDict setValue:destination.tripId forKey:@"tripId"];
-        [originDict setValue:destination.createdAt forKey:@"createdAt"];
-        [originDict setValue:destination.updatedAt forKey:@"updatedAt"];
-        if (destination.coordinates.count != 0){
-          [originDict setValue:destination.coordinates.firstObject forKey:@"latitude"];
-          [originDict setValue:destination.coordinates.lastObject forKey:@"longitude"];
-        }
-        [originDict setValue:destination.locType forKey:@"type"];
-        [originDict setValue:[NSNumber numberWithBool:destination.reached] forKey:@"reached"];
-        [destinationArray addObject:originDict];
-      }
     
-      if (destinationArray.count != 0) {
-        [dict setObject:destinationArray forKey:@"destination"];
+    for (int i = 0; i < trip.destinations.count; i++)
+    {
+      NSMutableDictionary *originDict = [[NSMutableDictionary alloc] init];
+      GeoSparkTripDestination *destination = [trip.destinations objectAtIndex:i];
+      [originDict setValue:destination.id forKey:@"id"];
+      [originDict setValue:destination.tripId forKey:@"tripId"];
+      [originDict setValue:destination.createdAt forKey:@"createdAt"];
+      [originDict setValue:destination.updatedAt forKey:@"updatedAt"];
+      if (destination.coordinates.count != 0){
+        [originDict setValue:destination.coordinates.firstObject forKey:@"latitude"];
+        [originDict setValue:destination.coordinates.lastObject forKey:@"longitude"];
       }
+      [originDict setValue:destination.locType forKey:@"type"];
+      [originDict setValue:[NSNumber numberWithBool:destination.reached] forKey:@"reached"];
+      [destinationArray addObject:originDict];
+    }
+    
+    if (destinationArray.count != 0) {
+      [dict setObject:destinationArray forKey:@"destination"];
+    }
   }
   
   return dict;
@@ -514,22 +535,26 @@ RCT_EXPORT_METHOD(locationPublisher:(BOOL)publisher){
   return  dict;
 }
 
-- (NSMutableArray *)activeTripResponse:(NSArray<GeoSparkTrip *>*)trips{
+- (NSArray *)activeTripResponse:(NSArray<GeoSparkTrip *>*)trips{
+  
   NSMutableArray *tripsArray = [[NSMutableArray alloc] init];
-
-  for (int i = 0; i <= trips.count; i++){
+  for (int i = 0; i < trips.count; i++){
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     GeoSparkTrip *trip = [trips objectAtIndex:i];
     [dict setValue:trip.tripId forKey:@"tripId"];
     [dict setValue:trip.createdAt forKey:@"createdAt"];
     [dict setValue:trip.updatedAt forKey:@"updatedAt"];
     [dict setValue:trip.syncStatus forKey:@"syncStatus"];
-    [dict setValue:[NSNumber numberWithBool:trip.started] forKey:@"isStarted"];
-    [dict setValue:[NSNumber numberWithBool:trip.paused] forKey:@"isPaused"];
-    [dict setValue:[NSNumber numberWithBool:trip.ended] forKey:@"isEnded"];
-    [dict setValue:[NSNumber numberWithBool:trip.deleted] forKey:@"isDeleted"];
+    dict[@"isStarted"] = @(trip.started);
+    dict[@"isPaused"] = @(trip.paused);
+    dict[@"isEnded"] = @(trip.ended);
+    dict[@"isDeleted"] = @(trip.deleted);
+    [tripsArray addObject:dict];
   }
-  return  tripsArray;
+  
+  NSDictionary *tripsData = [[NSDictionary alloc] initWithObjectsAndKeys:tripsArray,@"activeTrips", nil];
+  NSArray *outArray = [[NSArray alloc] initWithObjects:tripsData, nil];
+  return  outArray;
 }
 
 -(LocationAccuracy)getDesireAccuracy:(NSString *)accuracy{
@@ -544,7 +569,7 @@ RCT_EXPORT_METHOD(locationPublisher:(BOOL)publisher){
   }else if ([accuracy  isEqual: @"KILO_METERS"]){
     return  LocationAccuracyKCLLocationAccuracyKilometer;
   }else if ([accuracy  isEqual: @"THREE_KILOMETERS"]){
-     return  LocationAccuracyKCLLocationAccuracyThreeKilometers;
+    return  LocationAccuracyKCLLocationAccuracyThreeKilometers;
   }else{
     return NULL;
   }
@@ -565,19 +590,3 @@ RCT_EXPORT_METHOD(locationPublisher:(BOOL)publisher){
 }
 @end
 
-
-//const DesiredAccuracyIOS = {
-// BESTFORNAVIGATION:'BESTFORNAVIGATION',
-// BEST:'BEST',
-// NEAREST_TEN_METERS:'NEAREST_TEN_METERS',
-// HUNDRED_METERS:'HUNDRED_METERS',
-// KILO_METERS:'KILO_METERS',
-// THREE_KILOMETERS:'THREE_KILOMETERS',
-//}
-//
-//const ActivityType = {
-// OTHER:'OTHER',
-// AUTO_NAVIGATION:'AUTO_NAVIGATION',
-// OTHER_NAVIGATION:'OTHER_NAVIGATION',
-// FITNESS:'FITNESS',
-//}
