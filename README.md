@@ -6,7 +6,7 @@
 
 ## Documentation
 
-See the full documentation [here](https://geospark.co/docs/react-native).
+See the full documentation [here](https://github.com/geosparks/react-native-geospark/wiki).
 
 ## Support
 
