@@ -7,31 +7,60 @@
 
 #import "RNGeoSpark.h"
 #import <GeoSpark/GeoSpark.h>
+#import <React/RCTConvert.h>
+#import <React/RCTUtils.h>
+
 
 @implementation RNGeoSpark{
   BOOL hasListeners;
 }
 RCT_EXTERN_METHOD(supportedEvents)
+
 RCT_EXPORT_MODULE();
 
 
 - (instancetype)init {
   self = [super init];
   if (self) {
-    
+    [GeoSpark setDelegate:self];
   }
   return self;
 }
 
 - (NSArray<NSString *> *)supportedEvents {
-  return @[@"events",@"location", @"error"];
+  return @[@"location", @"location_received", @"trip_status", @"error"];
 }
 
-- (void)startObserving {
+- (void)didUpdateLocation:(GeoSparkLocation *)location {
+  if (hasListeners) {
+    [self sendEventWithName:@"location" body:[self userLocation:location]];
+  }
+}
+
+- (void)didReceiveTripStatus:(TripStatusListener *)tripStatus{
+  if (hasListeners) {
+    [self sendEventWithName:@"trip_status" body:[self didTripStatus:tripStatus]];
+  }
+}
+
+- (void)didReceiveUserLocation:(GeoSparkLocationReceived *)location{
+  if (hasListeners) {
+    [self sendEventWithName:@"location_received" body:[self didUserLocation:location]];
+  }
+}
+
+- (void)onError:(GeoSparkError *)error{
+  if (hasListeners) {
+    [self sendEventWithName:@"error" body:[self error:error]];
+  }
+}
+
+
+- (void)startListener {
   hasListeners = YES;
 }
 
-- (void)stopObserving {
+- (void)stopListener {
   hasListeners = NO;
 }
 
@@ -589,5 +618,53 @@ RCT_EXPORT_METHOD(locationPublisher:(BOOL)publisher){
     return NULL;
   }
 }
+
+- (NSMutableDictionary *) userLocation:(GeoSparkLocation *)location{
+  NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+  [dict setValue:location.userId forKey:@"userId"];
+  [dict setValue:location.activity forKey:@"activity"];
+  [dict setValue:location.recordedAt forKey:@"recordedAt"];
+  [dict setValue:location.timezoneOffset forKey:@"timezone"];
+  [dict setObject:[self locationReponse:location.location] forKey:@"location"];
+  return  dict;
+}
+
+- (NSMutableDictionary *) didUserLocation:(GeoSparkLocationReceived *)location{
+  NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+  [dict setValue:location.userId forKey:@"userId"];
+  [dict setValue:location.locationId forKey:@"locationId"];
+  [dict setValue:location.locationId forKey:@"locationId"];
+  [dict setValue:location.activity forKey:@"activity"];
+  [dict setValue:location.eventSource forKey:@"eventSource"];
+  [dict setValue:location.eventVersion forKey:@"eventVersion"];
+  [dict setValue:location.recordedAt forKey:@"recordedAt"];
+  [dict setValue:location.eventType forKey:@"eventType"];
+  [dict setValue:location.latitude forKey:@"latitude"];
+  [dict setValue:location.longitude forKey:@"longitude"];
+  [dict setValue:location.horizontalAccuracy forKey:@"horizontalAccuracy"];
+  [dict setValue:location.verticalAccuracy forKey:@"verticalAccuracy"];
+  [dict setValue:location.speed forKey:@"speed"];
+  [dict setValue:location.course forKey:@"course"];
+  [dict setValue:location.altitude forKey:@"altitude"];
+
+  return dict;
+}
+
+
+
+- (NSMutableDictionary *) didTripStatus:(TripStatusListener *)trip{
+  NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+  [dict setValue:[NSNumber numberWithDouble:trip.latitude] forKey:@"latitude"];
+  [dict setValue:[NSNumber numberWithDouble:trip.longitude] forKey:@"longitude"];
+  [dict setValue:[NSNumber numberWithDouble:trip.distance] forKey:@"distance"];
+  [dict setValue:[NSNumber numberWithDouble:trip.duration] forKey:@"duration"];
+  [dict setValue:[NSNumber numberWithDouble:trip.speed] forKey:@"speed"];
+  [dict setValue:[NSNumber numberWithDouble:trip.pace] forKey:@"pace"];
+  [dict setValue:trip.startedTime forKey:@"startedTime"];
+  return dict;
+
+}
+
+
 @end
 
