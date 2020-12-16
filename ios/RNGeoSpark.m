@@ -18,7 +18,6 @@ RCT_EXTERN_METHOD(supportedEvents)
 
 RCT_EXPORT_MODULE();
 
-
 - (instancetype)init {
   self = [super init];
   if (self) {
@@ -56,11 +55,11 @@ RCT_EXPORT_MODULE();
 }
 
 
-- (void)startListener {
+-(void)startObserving {
   hasListeners = YES;
 }
 
-- (void)stopListener {
+- (void)stopObserving {
   hasListeners = NO;
 }
 
