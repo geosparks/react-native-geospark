@@ -362,10 +362,10 @@ RCT_EXPORT_METHOD(startTracking:(NSString *)trackingMode){
 }
 
 // Custom Tracking
-RCT_EXPORT_METHOD(startTrackingCustom:(BOOL)allowBackground pauseAutomatic:(BOOL)pauseAutomatic activityType:(NSString *)activityType desiredAccuracy:(NSString *)desiredAccuracy showBackIndicator:(BOOL)showBackIndicator distanceFilter:(NSInteger)distanceFilter){
+RCT_EXPORT_METHOD(startTrackingCustom:(BOOL)allowBackground pauseAutomatic:(BOOL)pauseAutomatic activityType:(NSString *)activityType desiredAccuracy:(NSString *)desiredAccuracy showBackIndicator:(BOOL)showBackIndicator distanceFilter:(NSInteger)distanceFilter accuracyFilter:(NSInteger)accuracyFilter){
   dispatch_async(dispatch_get_main_queue(), ^{
     GeoSparkTrackingCustomMethodsObjcWrapper *wrapper = [[GeoSparkTrackingCustomMethodsObjcWrapper alloc] init];
-    [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:nil showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:nil useRegionMonitoring:nil useDynamicGeofencRadius:nil geofenceRadius:nil allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:nil];
+    [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:nil showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:nil useRegionMonitoring:nil useDynamicGeofencRadius:nil geofenceRadius:nil allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:nil accuracyFilter:accuracyFilter];
     [GeoSpark startTracking:GeoSparkTrackingModeCustom options:wrapper.customMethods];
   });
 }
@@ -383,10 +383,10 @@ RCT_EXPORT_METHOD(startSelfTracking:(NSString *)trackingMode){
   });
 }
 
-RCT_EXPORT_METHOD(startSelfTrackingCustom:(BOOL)allowBackground pauseAutomatic:(BOOL)pauseAutomatic activityType:(NSString *)activityType desiredAccuracy:(NSString *)desiredAccuracy showBackIndicator:(BOOL)showBackIndicator distanceFilter:(NSInteger)distanceFilter){
+RCT_EXPORT_METHOD(startSelfTrackingCustom:(BOOL)allowBackground pauseAutomatic:(BOOL)pauseAutomatic activityType:(NSString *)activityType desiredAccuracy:(NSString *)desiredAccuracy showBackIndicator:(BOOL)showBackIndicator distanceFilter:(NSInteger)distanceFilter accuracyFilter:(NSInteger)accuracyFilter){
   dispatch_async(dispatch_get_main_queue(), ^{
     GeoSparkTrackingCustomMethodsObjcWrapper *wrapper = [[GeoSparkTrackingCustomMethodsObjcWrapper alloc] init];
-    [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:nil showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:nil useRegionMonitoring:nil useDynamicGeofencRadius:nil geofenceRadius:nil allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:nil];
+    [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:nil showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:nil useRegionMonitoring:nil useDynamicGeofencRadius:nil geofenceRadius:nil allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:nil accuracyFilter:accuracyFilter];
      [GeoSpark startTracking:GeoSparkTrackingModeCustom options:wrapper.customMethods];
   });
 }
@@ -403,6 +403,15 @@ RCT_EXPORT_METHOD(stopTracking){
     [GeoSpark stopTracking];
   });
 }
+
+RCT_EXPORT_METHOD(enableAccuracyEngine){
+  [GeoSpark enableAccuracyEngine];
+}
+
+RCT_EXPORT_METHOD(disableAccuracyEngine){
+  [GeoSpark disableAccuracyEngine];
+}
+
 
 RCT_EXPORT_METHOD(setTrackingInAppState:(NSString *)appState){
   if ([appState  isEqual:@"ALWAYS_ON"]) {
@@ -648,8 +657,6 @@ RCT_EXPORT_METHOD(locationPublisher:(BOOL)publisher){
 
   return dict;
 }
-
-
 
 - (NSMutableDictionary *) didTripStatus:(TripStatusListener *)trip{
   NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
