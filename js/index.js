@@ -178,12 +178,12 @@ const startTracking = (trackingMode) => {
   NativeModules.RNGeoSpark.startTracking(trackingMode);
 };
 
-const startTrackingCustom = (allowBackground,pauseAutomatic,activityType,desiredAccuracy,showBackIndicator,distanceFilter) => {
-  NativeModules.RNGeoSpark.startTrackingCustom(allowBackground,pauseAutomatic,activityType,desiredAccuracy,showBackIndicator,distanceFilter);
+const startTrackingCustom = (allowBackground,pauseAutomatic,activityType,desiredAccuracy,showBackIndicator,distanceFilter,distanceFilter) => {
+  NativeModules.RNGeoSpark.startTrackingCustom(allowBackground,pauseAutomatic,activityType,desiredAccuracy,showBackIndicator,distanceFilter,distanceFilter);
 };
 
-const startSelfTrackingCustom = (allowBackground,pauseAutomatic,activityType,desiredAccuracy,showBackIndicator,distanceFilter) => {
-  NativeModules.RNGeoSpark.startSelfTrackingCustom(allowBackground,pauseAutomatic,activityType,desiredAccuracy,showBackIndicator,distanceFilter);
+const startSelfTrackingCustom = (allowBackground,pauseAutomatic,activityType,desiredAccuracy,showBackIndicator,distanceFilter,distanceFilter) => {
+  NativeModules.RNGeoSpark.startSelfTrackingCustom(allowBackground,pauseAutomatic,activityType,desiredAccuracy,showBackIndicator,distanceFilter,distanceFilter);
 };
 
 const startTrackingTimeInterval = (timeInterval,desiredAccuracy) => {
@@ -252,6 +252,14 @@ const startSelfTrackingDistanceInterval = (distance,stationary,desiredAccuracy) 
 
 const stopSelfTracking = () => {
   NativeModules.RNGeoSpark.stopSelfTracking();
+};
+
+const enableAccuracyEngine = () => {
+  NativeModules.RNGeoSpark.enableAccuracyEngine();
+};
+
+const disableAccuracyEngine = () => {
+  NativeModules.RNGeoSpark.disableAccuracyEngine();
 };
 
 const startListener = (event, callback) => (
@@ -325,6 +333,8 @@ startSelfTracking,
 startSelfTrackingTimeInterval,
 startSelfTrackingDistanceInterval,
 stopSelfTracking,
+enableAccuracyEngine,
+disableAccuracyEngine,
 startListener,
 stopListener,
 };
