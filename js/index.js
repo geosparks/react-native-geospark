@@ -41,6 +41,11 @@ const ActivityType = {
   FITNESS:'FITNESS',
 }
 
+const Subscribe = {
+ EVENTS : 'EVENTS',
+ LOCATION : 'LOCATION',
+ BOTH :'BOTH',
+}
 
 const createUser = (description,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.createUser(description,successCallback,errorCallback);
@@ -70,28 +75,12 @@ const getListenerStatus = (successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.getListenerStatus(successCallback,errorCallback);
 };
 
-const subscribeEvents = () => {
-  NativeModules.RNGeoSpark.subscribeEvents();
+const subscribe = (type,userid) => {
+  NativeModules.RNGeoSpark.subscribe(type,userid);
 };
 
-const unSubscribeEvents = () => {
-  NativeModules.RNGeoSpark.unSubscribeEvents();
-};
-
-const subscribeLocation = () => {
-  NativeModules.RNGeoSpark.subscribeLocation();
-};
-
-const unSubscribeLocation = () => {
-  NativeModules.RNGeoSpark.unSubscribeLocation();
-};
-
-const subscribeUserLocation = (userId) => {
-  NativeModules.RNGeoSpark.subscribeUserLocation(userId);
-};
-
-const unSubscribeUserLocation = (userId) => {
-  NativeModules.RNGeoSpark.unSubscribeUserLocation(userId);
+const unSubscribe = (type,userid) => {
+  NativeModules.RNGeoSpark.unSubscribe(type,userid);
 };
 
 const subscribeTripStatus = (tripId) => {
@@ -234,10 +223,6 @@ const offlineLocationTracking = (enabled) => {
   NativeModules.RNGeoSpark.offlineLocationTracking(enabled);
 }
 
-const locationPublisher = (enabled) => {
-  NativeModules.RNGeoSpark.locationPublisher(enabled);
-}
-
 const startSelfTracking = (trackingMode) => {
   NativeModules.RNGeoSpark.startSelfTracking(trackingMode);
 };
@@ -287,12 +272,8 @@ toggleEvents,
 toggleListener,
 getEventsStatus,
 getListenerStatus,
-subscribeEvents,
-unSubscribeEvents,
-subscribeLocation,
-unSubscribeLocation,
-subscribeUserLocation,
-unSubscribeUserLocation,
+subscribe,
+unSubscribe,
 subscribeTripStatus,
 unSubscribeTripStatus,
 disableBatteryOptimization,
@@ -328,7 +309,6 @@ updateCurrentLocationIos,
 logout,
 setTrackingInAppState,
 offlineLocationTracking,
-locationPublisher,
 startSelfTracking,
 startSelfTrackingTimeInterval,
 startSelfTrackingDistanceInterval,

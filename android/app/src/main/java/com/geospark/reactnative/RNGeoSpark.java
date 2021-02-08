@@ -10,6 +10,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
+import com.geospark.lib.GeoSparkPublish;
 import com.geospark.lib.GeoSparkTrackingMode;
 import com.geospark.lib.callback.GeoSparkActiveTripsCallback;
 import com.geospark.lib.callback.GeoSparkCallback;
@@ -133,33 +134,33 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void subscribeEvents() {
-        GeoSpark.subscribeEvents();
+    public static void subscribe(String type, String userId) {
+        switch (type) {
+            case "EVENTS":
+                GeoSpark.subscribe(GeoSpark.Subscribe.EVENTS, userId);
+                break;
+            case "LOCATION":
+                GeoSpark.subscribe(GeoSpark.Subscribe.LOCATION, userId);
+                break;
+            case "BOTH":
+                GeoSpark.subscribe(GeoSpark.Subscribe.BOTH, userId);
+                break;
+        }
     }
 
     @ReactMethod
-    public static void unSubscribeEvents() {
-        GeoSpark.unSubscribeEvents();
-    }
-
-    @ReactMethod
-    public static void subscribeLocation() {
-        GeoSpark.subscribeLocation();
-    }
-
-    @ReactMethod
-    public static void unSubscribeLocation() {
-        GeoSpark.unSubscribeLocation();
-    }
-
-    @ReactMethod
-    public static void subscribeUserLocation(String userId) {
-        GeoSpark.subscribeUserLocation(userId);
-    }
-
-    @ReactMethod
-    public static void unSubscribeUserLocation(String userId) {
-        GeoSpark.unSubscribeUserLocation(userId);
+    public static void unSubscribe(String type, String userId) {
+        switch (type) {
+            case "EVENTS":
+                GeoSpark.unSubscribe(GeoSpark.Subscribe.EVENTS, userId);
+                break;
+            case "LOCATION":
+                GeoSpark.unSubscribe(GeoSpark.Subscribe.LOCATION, userId);
+                break;
+            case "BOTH":
+                GeoSpark.unSubscribe(GeoSpark.Subscribe.BOTH, userId);
+                break;
+        }
     }
 
     @ReactMethod
@@ -227,8 +228,8 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
             case "ACTIVE":
                 GeoSpark.startTracking(GeoSparkTrackingMode.ACTIVE);
                 break;
-            case "REACTIVE":
-                GeoSpark.startTracking(GeoSparkTrackingMode.REACTIVE);
+            case "BALANCED":
+                GeoSpark.startTracking(GeoSparkTrackingMode.BALANCED);
                 break;
             case "PASSIVE":
                 GeoSpark.startTracking(GeoSparkTrackingMode.PASSIVE);
@@ -526,18 +527,13 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void locationPublisher(boolean value) {
-        GeoSpark.locationPublisher(value);
-    }
-
-    @ReactMethod
     public void startSelfTracking(String trackingMode) {
         switch (trackingMode) {
             case "ACTIVE":
                 GeoSpark.startSelfTracking(GeoSparkTrackingMode.ACTIVE);
                 break;
-            case "REACTIVE":
-                GeoSpark.startSelfTracking(GeoSparkTrackingMode.REACTIVE);
+            case "BALANCED":
+                GeoSpark.startSelfTracking(GeoSparkTrackingMode.BALANCED);
                 break;
             case "PASSIVE":
                 GeoSpark.startSelfTracking(GeoSparkTrackingMode.PASSIVE);
