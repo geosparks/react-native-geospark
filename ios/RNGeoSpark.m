@@ -154,36 +154,6 @@ RCT_EXPORT_METHOD(logout:(RCTResponseSenderBlock)successCallback rejecter:(RCTRe
   
 }
 
-// SubscribeEvents
-RCT_EXPORT_METHOD(subscribeEvents){
-  [GeoSpark subscribeEvents];
-}
-
-// unSubscribeEvents
-RCT_EXPORT_METHOD(unSubscribeEvents){
-  [GeoSpark unsubscribeEvents];
-}
-
-// subscribeLocation
-RCT_EXPORT_METHOD(subscribeLocation){
-  [GeoSpark subscribeLocation];
-}
-
-// unSubscribeLocation
-RCT_EXPORT_METHOD(unSubscribeLocation){
-  [GeoSpark unsubscribeLocation];
-}
-
-// subscribeUserLocation
-RCT_EXPORT_METHOD(subscribeUserLocation:(NSString *)userId ){
-  [GeoSpark subscribeUserLocation:userId];
-}
-
-// unSubscribeUserLocation
-RCT_EXPORT_METHOD(unSubscribeUserLocation:(NSString *)userId){
-  [GeoSpark unsubscribeUserLocation:userId];
-}
-
 // subscribeTripStatus
 RCT_EXPORT_METHOD(subscribeTripStatus:(NSString *)tripId){
   [GeoSpark subscribeTripStatus:tripId];
@@ -348,13 +318,13 @@ RCT_EXPORT_METHOD(updateCurrentLocationIos:(NSInteger)accuracy){
 }
 
 //Tracking
-// passive,reactive,active
+// passive,BALANCED,active
 RCT_EXPORT_METHOD(startTracking:(NSString *)trackingMode){
   dispatch_async(dispatch_get_main_queue(), ^{
     if ([trackingMode  isEqual:@"PASSIVE"]) {
       [GeoSpark startTracking:GeoSparkTrackingModePassive options:nil];
-    } else if ([trackingMode  isEqual:@"REACTIVE"]){
-      [GeoSpark startTracking:GeoSparkTrackingModeReactive options:nil];
+    } else if ([trackingMode  isEqual:@"BALANCED"]){
+      [GeoSpark startTracking:GeoSparkTrackingModeBalanced options:nil];
     } else{
       [GeoSpark startTracking:GeoSparkTrackingModeActive options:nil];
     }
@@ -375,8 +345,8 @@ RCT_EXPORT_METHOD(startSelfTracking:(NSString *)trackingMode){
   dispatch_async(dispatch_get_main_queue(), ^{
     if ([trackingMode  isEqual:@"PASSIVE"]) {
       [GeoSpark startTracking:GeoSparkTrackingModePassive options:nil];
-    } else if ([trackingMode  isEqual:@"REACTIVE"]){
-      [GeoSpark startTracking:GeoSparkTrackingModeReactive options:nil];
+    } else if ([trackingMode  isEqual:@"BALANCED"]){
+      [GeoSpark startTracking:GeoSparkTrackingModeBalanced options:nil];
     } else{
       [GeoSpark startTracking:GeoSparkTrackingModeActive options:nil];
     }
@@ -427,8 +397,26 @@ RCT_EXPORT_METHOD(offlineLocationTracking:(BOOL)offline){
   [GeoSpark offlineLocationTracking:offline];
 }
 
-RCT_EXPORT_METHOD(locationPublisher:(BOOL)publisher){
-  [GeoSpark locationPublisher:publisher];
+// Subscribe events & location
+
+RCT_EXPORT_METHOD(subscribe:(NSString *)type userId:(NSString *)userId){
+  if ([type  isEqual:@"LOCATION"]){
+    [GeoSpark subscribe:GeoSparkSubscribeLocation :userId];
+  }else if ([type isEqual:@"EVENTS"]){
+    [GeoSpark subscribe:GeoSparkSubscribeEvents :userId];
+  }else{
+    [GeoSpark subscribe:GeoSparkSubscribeEvents :userId];
+  }
+}
+
+RCT_EXPORT_METHOD(unsubscribe:(NSString *)type userId:(NSString *)userId){
+  if ([type  isEqual:@"LOCATION"]){
+    [GeoSpark unsubscribe:GeoSparkSubscribeLocation :userId];
+  }else if ([type isEqual:@"EVENTS"]){
+    [GeoSpark unsubscribe:GeoSparkSubscribeEvents :userId];
+  }else{
+    [GeoSpark unsubscribe:GeoSparkSubscribeEvents :userId];
+  }
 }
 
 

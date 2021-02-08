@@ -9,7 +9,7 @@ const eventEmitter = new NativeEventEmitter(NativeModules.RNGeoSpark);
 
 const TrackingMode = {
  ACTIVE : 'ACTIVE',
- REACTIVE : 'REACTIVE',
+ BALANCED : 'BALANCED',
  PASSIVE :'PASSIVE',
 }
 
