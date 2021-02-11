@@ -357,7 +357,7 @@ RCT_EXPORT_METHOD(startSelfTrackingCustom:(BOOL)allowBackground pauseAutomatic:(
   dispatch_async(dispatch_get_main_queue(), ^{
     GeoSparkTrackingCustomMethodsObjcWrapper *wrapper = [[GeoSparkTrackingCustomMethodsObjcWrapper alloc] init];
     [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:nil showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:nil useRegionMonitoring:nil useDynamicGeofencRadius:nil geofenceRadius:nil allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:nil accuracyFilter:accuracyFilter];
-     [GeoSpark startTracking:GeoSparkTrackingModeCustom options:wrapper.customMethods];
+    [GeoSpark startTracking:GeoSparkTrackingModeCustom options:wrapper.customMethods];
   });
 }
 
@@ -416,6 +416,28 @@ RCT_EXPORT_METHOD(unsubscribe:(NSString *)type userId:(NSString *)userId){
     [GeoSpark unsubscribe:GeoSparkSubscribeEvents :userId];
   }else{
     [GeoSpark unsubscribe:GeoSparkSubscribeEvents :userId];
+  }
+}
+
+
+// Publish only & Publish Save
+RCT_EXPORT_METHOD(publishSave:(NSDictionary *)dict){
+  GeoSparkPublish *publish = [[GeoSparkPublish alloc] init];
+  publish.meta_data = dict;
+  if ([[dict allKeys] count] != 0) {
+    [GeoSpark publishSave:publish];
+  }else{
+    [GeoSpark publishSave:nil];
+  }
+}
+
+RCT_EXPORT_METHOD(publishOnly:(NSDictionary *)dict){
+  if ([[dict allKeys] count] != 0) {
+    GeoSparkPublish *publish = [self publish:dict];
+    [GeoSpark publishOnly:publish];
+  }else{
+    [GeoSpark publishOnly:nil];
+
   }
 }
 
@@ -642,7 +664,7 @@ RCT_EXPORT_METHOD(unsubscribe:(NSString *)type userId:(NSString *)userId){
   [dict setValue:location.speed forKey:@"speed"];
   [dict setValue:location.course forKey:@"course"];
   [dict setValue:location.altitude forKey:@"altitude"];
-
+  
   return dict;
 }
 
@@ -656,9 +678,98 @@ RCT_EXPORT_METHOD(unsubscribe:(NSString *)type userId:(NSString *)userId){
   [dict setValue:[NSNumber numberWithDouble:trip.pace] forKey:@"pace"];
   [dict setValue:trip.startedTime forKey:@"startedTime"];
   return dict;
-
+  
 }
 
+-(GeoSparkPublish *)publish:(NSDictionary *)dict{
+  
+  GeoSparkPublish *publish = [[GeoSparkPublish alloc] init];
+  
+  if ([dict objectForKey:@"USER_ID"]) {
+    publish.user_id = true;
+  }
+  if ([dict objectForKey:@"APP_ID"]) {
+    publish.user_id = true;
+  }
+  if ([dict objectForKey:@"GEOFENCE_EVENTS"]) {
+    publish.geofence_events = true;
+  }
+  if ([dict objectForKey:@"LOCATION_EVENTS"]) {
+    publish.location_events = true;
+  }
+  if ([dict objectForKey:@"NEARBY_EVENTS"]) {
+    publish.nearby_events = true;
+  }
+  if ([dict objectForKey:@"TRIPS_EVENTS"]) {
+    publish.trips_events = true;
+  }
+  if ([dict objectForKey:@"LOCATION_LISTENER"]) {
+    publish.location_listener = true;
+  }
+  if ([dict objectForKey:@"EVENT_LISTENER"]) {
+    publish.event_listener = true;
+  }
+  if ([dict objectForKey:@"ALTITUDE"]) {
+    publish.altitude = true;
+  }
+  if ([dict objectForKey:@"COURSE"]) {
+    publish.course = true;
+  }
+  if ([dict objectForKey:@"SPEED"]) {
+    publish.speed = true;
+  }
+  if ([dict objectForKey:@"VERTICAL_ACCURACY"]) {
+    publish.vertical_accuracy = true;
+  }
+  if ([dict objectForKey:@"HORIZONTAL_ACCURACY"]) {
+    publish.horizontal_accuracy = true;
+  }
+  if ([dict objectForKey:@"BATTERY_REMAINING"]) {
+    publish.battery_remaining = true;
+  }
+  if ([dict objectForKey:@"BATTERY_SAVER"]) {
+    publish.battery_saver = true;
+  }
+  if ([dict objectForKey:@"BATTERY_STATUS"]) {
+    publish.battery_status = true;
+  }
+  if ([dict objectForKey:@"ACTIVITY"]) {
+    publish.activity = true;
+  }
+  if ([dict objectForKey:@"AIRPLANE_MODE"]) {
+    publish.airplane_mode = true;
+  }
+  if ([dict objectForKey:@"DEVICE_MANUFACTURE"]) {
+    publish.device_manufacturer = true;
+  }
+  if ([dict objectForKey:@"DEVICE_MODEL"]) {
+    publish.device_model = true;
+  }
+  if ([dict objectForKey:@"TRACKING_MODE"]) {
+    publish.tracking_mode = true;
+  }
+  if ([dict objectForKey:@"LOCATIONPERMISSION"]) {
+    publish.location_permission = true;
+  }
+  if ([dict objectForKey:@"NETWORK_STATUS"]) {
+    publish.network_status = true;
+  }
+  if ([dict objectForKey:@"OS_VERSION"]) {
+    publish.os_version = true;
+  }
+  if ([dict objectForKey:@"RECORDERD_AT"]) {
+    publish.recorded_at = true;
+  }
+  if ([dict objectForKey:@"TZ_OFFSET"]) {
+    publish.tz_offset = true;
+  }
+  if ([dict objectForKey:@"METADATA"]) {
+    publish.meta_data = [dict objectForKey:@"METADATA"]
+  }
+
+  return publish;
+}
 
 @end
+
 
