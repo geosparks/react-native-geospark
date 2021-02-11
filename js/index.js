@@ -7,34 +7,6 @@ if (!NativeModules.RNGeoSpark) {
 
 const eventEmitter = new NativeEventEmitter(NativeModules.RNGeoSpark);
 
-const PublishOnly = {
-  USER_ID : 'USER_ID',
-  APP_ID : 'APP_ID',
-  RECORDERD_AT :'APP_ID',
-  TZ_OFFSET :'TZ_OFFSET',
-  GEOFENCE_EVENTS :'GEOFENCE_EVENTS',
-  TRIPS_EVENTS :'TRIPS_EVENTS',
-  LOCATION_EVENTS :'LOCATION_EVENTS',
-  NEARBY_EVENTS :'NEARBY_EVENTS',
-  LOCATION_LISTENER :'LOCATION_LISTENER',
-  EVENT_LISTENER :'EVENT_LISTENER',
-  APP_CONTEXT :'APP_CONTEXT',
-  NETWORK_STATUS :'NETWORK_STATUS',
-  LOCATIONPERMISSION :'LOCATIONPERMISSION',
-  BATTERY_STATUS :'BATTERY_STATUS',
-  AIRPLANE_MODE :'AIRPLANE_MODE',
-  BATTERY_SAVER :'BATTERY_SAVER',
-  BATTERY_REMAINING :'BATTERY_REMAINING',
-  DEVICE_MODEL :'DEVICE_MODEL',
-  DEVICE_MANUFACTURE :'DEVICE_MANUFACTURE',
-  OS_VERSION :'OS_VERSION',
-  TRACKING_MODE :'TRACKING_MODE',
-  ALTITUDE :'ALTITUDE',
-  VERTICAL_ACCURACY :'VERTICAL_ACCURACY',
-  HORIZONTAL_ACCURACY :'HORIZONTAL_ACCURACY',
-  COURSE :'COURSE',
-  ACTIVITY :'ACTIVITY'
- }
 
 const TrackingMode = {
  ACTIVE : 'ACTIVE',
@@ -70,11 +42,44 @@ const ActivityType = {
   FITNESS:'FITNESS',
 }
 
-const Subscribe = {
+const SubscribeListener = {
  EVENTS : 'EVENTS',
  LOCATION : 'LOCATION',
  BOTH :'BOTH',
 }
+
+const Publish = {
+	APP_ID : 'APP_ID',
+  	USER_ID : 'USER_ID',
+	GEOFENCE_EVENTS :'GEOFENCE_EVENTS',
+	LOCATION_EVENTS :'LOCATION_EVENTS',
+	NEARBY_EVENTS :'NEARBY_EVENTS',
+ 	TRIPS_EVENTS :'TRIPS_EVENTS',
+  	LOCATION_LISTENER :'LOCATION_LISTENER',
+  	EVENT_LISTENER :'EVENT_LISTENER',
+	ALTITUDE :'ALTITUDE',
+ 	COURSE :'COURSE',
+ 	SPEED:'SPEED',
+ 	VERTICAL_ACCURACY :'VERTICAL_ACCURACY',
+  	HORIZONTAL_ACCURACY :'HORIZONTAL_ACCURACY',
+ 	APP_CONTEXT :'APP_CONTEXT',
+ 	ALLOW_MOCKED :'ALLOW_MOCKED',
+	BATTERY_REMAINING :'BATTERY_REMAINING',
+	BATTERY_SAVER :'BATTERY_SAVER',
+	BATTERY_STATUS :'BATTERY_STATUS',
+	ACTIVITY :'ACTIVITY',
+	AIRPLANE_MODE :'AIRPLANE_MODE',
+	DEVICE_MANUFACTURE :'DEVICE_MANUFACTURE',
+	DEVICE_MODEL :'DEVICE_MODEL',
+	TRACKING_MODE :'TRACKING_MODE',
+	LOCATIONPERMISSION :'LOCATIONPERMISSION',
+	NETWORK_STATUS :'NETWORK_STATUS',
+	GPS_STATUS :'GPS_STATUS',
+ 	OS_VERSION :'OS_VERSION',
+	RECORDERD_AT :'RECORDERD_AT',
+  	TZ_OFFSET :'TZ_OFFSET',
+  	METADATA:'METADATA',
+ }
 
 const createUser = (description,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.createUser(description,successCallback,errorCallback);
@@ -192,6 +197,14 @@ const activeTrips = (offline,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.activeTrips(offline,successCallback,errorCallback);
 };
 
+const publishOnly = (JSON) => {
+  NativeModules.RNGeoSpark.publishOnly(JSON);
+};
+
+const publishAndSave = (metaDataJSON) => {
+  NativeModules.RNGeoSpark.publishAndSave(metaDataJSON);
+};
+
 const startTracking = (trackingMode) => {
   NativeModules.RNGeoSpark.startTracking(trackingMode);
 };
@@ -294,6 +307,8 @@ DesiredAccuracy,
 AppState,
 DesiredAccuracyIOS,
 ActivityType,
+SubscribeListener,
+Publish,
 createUser,
 getUser,
 setDescription,
@@ -323,6 +338,8 @@ forceStopTrip,
 deleteTrip,
 syncTrip,
 activeTrips,
+publishOnly,
+publishAndSave,
 startTracking,
 startTrackingCustom,
 startSelfTrackingCustom,

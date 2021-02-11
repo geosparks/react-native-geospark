@@ -2,12 +2,14 @@ package com.geospark.reactnative;
 
 import android.app.Activity;
 import android.location.Location;
+import android.text.TextUtils;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.geospark.lib.GeoSpark;
 import com.geospark.lib.GeoSparkPublish;
@@ -24,6 +26,9 @@ import com.geospark.lib.models.GeoSparkError;
 import com.geospark.lib.models.GeoSparkTrip;
 import com.geospark.lib.models.GeoSparkUser;
 import com.geospark.lib.models.createtrip.GeoSparkCreateTrip;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class RNGeoSpark extends ReactContextBaseJavaModule {
     ReactApplicationContext reactContext;
@@ -524,6 +529,120 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     @ReactMethod
     public static void offlineLocationTracking(boolean value) {
         GeoSpark.offlineLocationTracking(value);
+    }
+
+    @ReactMethod
+    public static void publishAndSave(ReadableMap readableMap) {
+        GeoSparkPublish.Builder geoSparkPublish = new GeoSparkPublish.Builder();
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.METADATA))) {
+            try {
+                geoSparkPublish.metadata(new JSONObject(readableMap.getString(RNGeoSparkUtils.METADATA)));
+            } catch (JSONException e) {
+            }
+        }
+        GeoSpark.publishAndSave(geoSparkPublish.build());
+    }
+
+    @ReactMethod
+    public static void publishOnly(ReadableMap readableMap) {
+        GeoSparkPublish.Builder geoSparkPublish = new GeoSparkPublish.Builder();
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.APP_ID))) {
+            geoSparkPublish.appId();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.USER_ID))) {
+            geoSparkPublish.userId();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.GEOFENCE_EVENTS))) {
+            geoSparkPublish.geofenceEvents();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.LOCATION_EVENTS))) {
+            geoSparkPublish.locationEvents();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.NEARBY_EVENTS))) {
+            geoSparkPublish.nearbyEvents();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.TRIPS_EVENTS))) {
+            geoSparkPublish.tripsEvents();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.LOCATION_LISTENER))) {
+            geoSparkPublish.locationListener();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.EVENT_LISTENER))) {
+            geoSparkPublish.eventListener();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.ALTITUDE))) {
+            geoSparkPublish.altitude();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.COURSE))) {
+            geoSparkPublish.course();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.SPEED))) {
+            geoSparkPublish.speed();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.HORIZONTAL_ACCURACY))) {
+            geoSparkPublish.horizontalAccuracy();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.VERTICAL_ACCURACY))) {
+            geoSparkPublish.verticalAccuracy();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.APP_CONTEXT))) {
+            geoSparkPublish.appContext();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.ALLOW_MOCKED))) {
+            geoSparkPublish.allowMocked();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.BATTERY_REMAINING))) {
+            geoSparkPublish.batteryRemaining();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.BATTERY_SAVER))) {
+            geoSparkPublish.batterySaver();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.BATTERY_STATUS))) {
+            geoSparkPublish.batteryStatus();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.ACTIVITY))) {
+            geoSparkPublish.activity();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.AIRPLANE_MODE))) {
+            geoSparkPublish.airplaneMode();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.DEVICE_MANUFACTURE))) {
+            geoSparkPublish.deviceManufacturer();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.DEVICE_MODEL))) {
+            geoSparkPublish.deviceModel();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.TRACKING_MODE))) {
+            geoSparkPublish.trackingMode();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.LOCATIONPERMISSION))) {
+            geoSparkPublish.locationPermission();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.NETWORK_STATUS))) {
+            geoSparkPublish.networkStatus();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.GPS_STATUS))) {
+            geoSparkPublish.gpsStatus();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.OS_VERSION))) {
+            geoSparkPublish.osVersion();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.RECORDERD_AT))) {
+            geoSparkPublish.recordedAt();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.TZ_OFFSET))) {
+            geoSparkPublish.tzOffset();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.RECORDERD_AT))) {
+            geoSparkPublish.recordedAt();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.ACTIVITY))) {
+            geoSparkPublish.activity();
+        }
+        if (!TextUtils.isEmpty(readableMap.getString(RNGeoSparkUtils.METADATA))) {
+            // geoSparkPublish.metadata();
+        }
+        GeoSpark.publishOnly(geoSparkPublish.build());
     }
 
     @ReactMethod
