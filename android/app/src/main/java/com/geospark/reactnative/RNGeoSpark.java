@@ -2,8 +2,6 @@ package com.geospark.reactnative;
 
 import android.app.Activity;
 import android.location.Location;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
@@ -692,6 +690,16 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
             }
         }
         GeoSpark.publishOnly(geoSparkPublish.build());
+    }
+
+    @ReactMethod
+    public static void enableAccuracyEngine() {
+        GeoSpark.enableAccuracyEngine();
+    }
+
+    @ReactMethod
+    public static void disableAccuracyEngine() {
+        GeoSpark.disableAccuracyEngine();
     }
 
     @ReactMethod
