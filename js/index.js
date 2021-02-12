@@ -50,18 +50,18 @@ const SubscribeListener = {
 
 const Publish = {
 	APP_ID : 'APP_ID',
-  USER_ID : 'USER_ID',
+  	USER_ID : 'USER_ID',
 	GEOFENCE_EVENTS :'GEOFENCE_EVENTS',
 	LOCATION_EVENTS :'LOCATION_EVENTS',
 	NEARBY_EVENTS :'NEARBY_EVENTS',
  	TRIPS_EVENTS :'TRIPS_EVENTS',
-  LOCATION_LISTENER :'LOCATION_LISTENER',
-  EVENT_LISTENER :'EVENT_LISTENER',
+  	LOCATION_LISTENER :'LOCATION_LISTENER',
+  	EVENT_LISTENER :'EVENT_LISTENER',
 	ALTITUDE :'ALTITUDE',
  	COURSE :'COURSE',
  	SPEED:'SPEED',
  	VERTICAL_ACCURACY :'VERTICAL_ACCURACY',
-  HORIZONTAL_ACCURACY :'HORIZONTAL_ACCURACY',
+  	HORIZONTAL_ACCURACY :'HORIZONTAL_ACCURACY',
  	APP_CONTEXT :'APP_CONTEXT',
  	ALLOW_MOCKED :'ALLOW_MOCKED',
 	BATTERY_REMAINING :'BATTERY_REMAINING',
@@ -78,7 +78,6 @@ const Publish = {
  	OS_VERSION :'OS_VERSION',
 	RECORDERD_AT :'RECORDERD_AT',
   TZ_OFFSET :'TZ_OFFSET',
-  METADATA:'METADATA',
  }
 
 const createUser = (description,successCallback,errorCallback) => {
@@ -197,12 +196,12 @@ const activeTrips = (offline,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.activeTrips(offline,successCallback,errorCallback);
 };
 
-const publishOnly = (JSON) => {
-  NativeModules.RNGeoSpark.publishOnly(JSON);
+const publishOnly = (array,jsonMetadata) => {
+  NativeModules.RNGeoSpark.publishOnly(array,jsonMetadata);
 };
 
-const publishAndSave = (metaDataJSON) => {
-  NativeModules.RNGeoSpark.publishAndSave(metaDataJSON);
+const publishAndSave = (jsonMetadata) => {
+  NativeModules.RNGeoSpark.publishAndSave(jsonMetadata);
 };
 
 const startTracking = (trackingMode) => {
