@@ -154,36 +154,6 @@ RCT_EXPORT_METHOD(logout:(RCTResponseSenderBlock)successCallback rejecter:(RCTRe
   
 }
 
-// SubscribeEvents
-RCT_EXPORT_METHOD(subscribeEvents){
-  [GeoSpark subscribeEvents];
-}
-
-// unSubscribeEvents
-RCT_EXPORT_METHOD(unSubscribeEvents){
-  [GeoSpark unsubscribeEvents];
-}
-
-// subscribeLocation
-RCT_EXPORT_METHOD(subscribeLocation){
-  [GeoSpark subscribeLocation];
-}
-
-// unSubscribeLocation
-RCT_EXPORT_METHOD(unSubscribeLocation){
-  [GeoSpark unsubscribeLocation];
-}
-
-// subscribeUserLocation
-RCT_EXPORT_METHOD(subscribeUserLocation:(NSString *)userId ){
-  [GeoSpark subscribeUserLocation:userId];
-}
-
-// unSubscribeUserLocation
-RCT_EXPORT_METHOD(unSubscribeUserLocation:(NSString *)userId){
-  [GeoSpark unsubscribeUserLocation:userId];
-}
-
 // subscribeTripStatus
 RCT_EXPORT_METHOD(subscribeTripStatus:(NSString *)tripId){
   [GeoSpark subscribeTripStatus:tripId];
@@ -348,13 +318,13 @@ RCT_EXPORT_METHOD(updateCurrentLocationIos:(NSInteger)accuracy){
 }
 
 //Tracking
-// passive,reactive,active
+// passive,BALANCED,active
 RCT_EXPORT_METHOD(startTracking:(NSString *)trackingMode){
   dispatch_async(dispatch_get_main_queue(), ^{
     if ([trackingMode  isEqual:@"PASSIVE"]) {
       [GeoSpark startTracking:GeoSparkTrackingModePassive options:nil];
-    } else if ([trackingMode  isEqual:@"REACTIVE"]){
-      [GeoSpark startTracking:GeoSparkTrackingModeReactive options:nil];
+    } else if ([trackingMode  isEqual:@"BALANCED"]){
+      [GeoSpark startTracking:GeoSparkTrackingModeBalanced options:nil];
     } else{
       [GeoSpark startTracking:GeoSparkTrackingModeActive options:nil];
     }
@@ -375,8 +345,8 @@ RCT_EXPORT_METHOD(startSelfTracking:(NSString *)trackingMode){
   dispatch_async(dispatch_get_main_queue(), ^{
     if ([trackingMode  isEqual:@"PASSIVE"]) {
       [GeoSpark startTracking:GeoSparkTrackingModePassive options:nil];
-    } else if ([trackingMode  isEqual:@"REACTIVE"]){
-      [GeoSpark startTracking:GeoSparkTrackingModeReactive options:nil];
+    } else if ([trackingMode  isEqual:@"BALANCED"]){
+      [GeoSpark startTracking:GeoSparkTrackingModeBalanced options:nil];
     } else{
       [GeoSpark startTracking:GeoSparkTrackingModeActive options:nil];
     }
@@ -387,7 +357,7 @@ RCT_EXPORT_METHOD(startSelfTrackingCustom:(BOOL)allowBackground pauseAutomatic:(
   dispatch_async(dispatch_get_main_queue(), ^{
     GeoSparkTrackingCustomMethodsObjcWrapper *wrapper = [[GeoSparkTrackingCustomMethodsObjcWrapper alloc] init];
     [wrapper setUpCustomOptionsWithDesiredAccuracy:[self getDesireAccuracy:desiredAccuracy] useVisit:nil showsBackgroundLocationIndicator:showBackIndicator distanceFilter:distanceFilter useSignificant:nil useRegionMonitoring:nil useDynamicGeofencRadius:nil geofenceRadius:nil allowBackgroundLocationUpdates:allowBackground activityType:[self getActivityType:activityType] pausesLocationUpdatesAutomatically:pauseAutomatic useStandardLocationServices:nil accuracyFilter:accuracyFilter];
-     [GeoSpark startTracking:GeoSparkTrackingModeCustom options:wrapper.customMethods];
+    [GeoSpark startTracking:GeoSparkTrackingModeCustom options:wrapper.customMethods];
   });
 }
 
@@ -427,8 +397,52 @@ RCT_EXPORT_METHOD(offlineLocationTracking:(BOOL)offline){
   [GeoSpark offlineLocationTracking:offline];
 }
 
-RCT_EXPORT_METHOD(locationPublisher:(BOOL)publisher){
-  [GeoSpark locationPublisher:publisher];
+// Subscribe events & location
+
+RCT_EXPORT_METHOD(subscribe:(NSString *)type userId:(NSString *)userId){
+  if ([type  isEqual:@"LOCATION"]){
+    [GeoSpark subscribe:GeoSparkSubscribeLocation :userId];
+  }else if ([type isEqual:@"EVENTS"]){
+    [GeoSpark subscribe:GeoSparkSubscribeEvents :userId];
+  }else{
+    [GeoSpark subscribe:GeoSparkSubscribeEvents :userId];
+  }
+}
+
+RCT_EXPORT_METHOD(unsubscribe:(NSString *)type userId:(NSString *)userId){
+  if ([type  isEqual:@"LOCATION"]){
+    [GeoSpark unsubscribe:GeoSparkSubscribeLocation :userId];
+  }else if ([type isEqual:@"EVENTS"]){
+    [GeoSpark unsubscribe:GeoSparkSubscribeEvents :userId];
+  }else{
+    [GeoSpark unsubscribe:GeoSparkSubscribeEvents :userId];
+  }
+}
+
+
+// Publish only & Publish Save
+RCT_EXPORT_METHOD(publishAndSave:(NSDictionary *)dict){
+  dispatch_async(dispatch_get_main_queue(), ^{
+    if ([[dict allKeys] count] != 0) {
+      GeoSparkPublish *publish = [[GeoSparkPublish alloc] init];
+      publish.meta_data = dict;
+      [GeoSpark publishSave:publish];
+    }else{
+      [GeoSpark publishSave:nil];
+    }
+  });
+}
+
+RCT_EXPORT_METHOD(publishOnly:(NSArray *)array metaData:(NSDictionary *)metaData){
+  
+  dispatch_async(dispatch_get_main_queue(), ^{
+    if ([array count] != 0) {
+      GeoSparkPublish *publish = [self publish:array metaData:metaData];
+      [GeoSpark publishOnly:publish];
+    }else{
+      [GeoSpark publishOnly:nil];
+    }
+  });
 }
 
 
@@ -654,7 +668,7 @@ RCT_EXPORT_METHOD(locationPublisher:(BOOL)publisher){
   [dict setValue:location.speed forKey:@"speed"];
   [dict setValue:location.course forKey:@"course"];
   [dict setValue:location.altitude forKey:@"altitude"];
-
+  
   return dict;
 }
 
@@ -668,9 +682,96 @@ RCT_EXPORT_METHOD(locationPublisher:(BOOL)publisher){
   [dict setValue:[NSNumber numberWithDouble:trip.pace] forKey:@"pace"];
   [dict setValue:trip.startedTime forKey:@"startedTime"];
   return dict;
-
+  
 }
 
+- (GeoSparkPublish *)publish:(NSArray *)array metaData:(NSDictionary *)metaData{
+  GeoSparkPublish *publish = [[GeoSparkPublish alloc] init];
+  for (NSString *string in array)
+  {
+    if ([string isEqual:@"USER_ID"]) {
+      publish.user_id = true;
+    }
+    
+    if ([string isEqual:@"APP_ID"]) {
+      publish.user_id = true;
+    }
+    if ([string isEqual:@"GEOFENCE_EVENTS"]) {
+      publish.geofence_events = true;
+    }
+    if ([string isEqual:@"LOCATION_EVENTS"]) {
+      publish.location_events = true;
+    }
+    if ([string isEqual:@"NEARBY_EVENTS"]) {
+      publish.nearby_events = true;
+    }
+    if ([string isEqual:@"TRIPS_EVENTS"]) {
+      publish.trips_events = true;
+    }
+    if ([string isEqual:@"LOCATION_LISTENER"]) {
+      publish.location_listener = true;
+    }
+    if ([string isEqual:@"EVENT_LISTENER"]) {
+      publish.event_listener = true;
+    }
+    if ([string isEqual:@"ALTITUDE"]) {
+      publish.altitude = true;
+    }
+    if ([string isEqual:@"COURSE"]) {
+      publish.course = true;
+    }
+    if ([string isEqual:@"SPEED"]) {
+      publish.speed = true;
+    }
+    if ([string isEqual:@"VERTICAL_ACCURACY"]) {
+      publish.vertical_accuracy = true;
+    }
+    if ([string isEqual:@"HORIZONTAL_ACCURACY"]) {
+      publish.horizontal_accuracy = true;
+    }
+    if ([string isEqual:@"BATTERY_REMAINING"]) {
+      publish.battery_remaining = true;
+    }
+    if ([string isEqual:@"BATTERY_SAVER"]) {
+      publish.battery_saver = true;
+    }
+    if ([string isEqual:@"BATTERY_STATUS"]) {
+      publish.battery_status = true;
+    }
+    if ([string isEqual:@"ACTIVITY"]) {
+      publish.activity = true;
+    }
+    if ([string isEqual:@"AIRPLANE_MODE"]) {
+      publish.airplane_mode = true;
+    }
+    if ([string isEqual:@"DEVICE_MANUFACTURE"]) {
+      publish.device_manufacturer = true;
+    }
+    if ([string isEqual:@"DEVICE_MODEL"]) {
+      publish.device_model = true;
+    }
+    if ([string isEqual:@"TRACKING_MODE"]) {
+      publish.tracking_mode = true;
+    }
+    if ([string isEqual:@"LOCATIONPERMISSION"]) {
+      publish.location_permission = true;
+    }
+    if ([string isEqual:@"NETWORK_STATUS"]) {
+      publish.network_status = true;
+    }
+    if ([string isEqual:@"OS_VERSION"]) {
+      publish.os_version = true;
+    }
+    if ([string isEqual:@"RECORDERD_AT"]) {
+      publish.recorded_at = true;
+    }
+    if ([string isEqual:@"TZ_OFFSET"]) {
+      publish.tz_offset = true;
+    }
+  }
+  return publish;
+}
 
 @end
+
 
