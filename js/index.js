@@ -240,6 +240,10 @@ const allowMockLocation = (enabled) => {
   NativeModules.RNGeoSpark.allowMockLocation(enabled);
 };
 
+const getCurrentLocationListener = (accuracy) => {
+	NativeModules.RNGeoSpark.getCurrentLocationListener(accuracy);
+}
+
 const getCurrentLocation = (desiredAccuracy,accuracy,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.getCurrentLocation(desiredAccuracy,accuracy,successCallback,errorCallback);
 };
@@ -352,6 +356,7 @@ startTrackingDistanceInterval,
 stopTracking,
 isLocationTracking,
 allowMockLocation,
+getCurrentLocationListener,
 getCurrentLocation,
 updateCurrentLocation,
 getCurrentLocationIos,
