@@ -204,6 +204,10 @@ const publishAndSave = (jsonMetadata) => {
   NativeModules.RNGeoSpark.publishAndSave(jsonMetadata);
 };
 
+const stopPublishing = () => {
+	NativeModules.RNGeoSpark.stopPublishing();
+}
+
 const startTracking = (trackingMode) => {
   NativeModules.RNGeoSpark.startTracking(trackingMode);
 };
@@ -339,6 +343,7 @@ syncTrip,
 activeTrips,
 publishOnly,
 publishAndSave,
+stopPublishing,
 startTracking,
 startTrackingCustom,
 startSelfTrackingCustom,

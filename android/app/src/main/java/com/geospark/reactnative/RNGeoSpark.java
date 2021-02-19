@@ -693,6 +693,11 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public static void stopPublishing() {
+        GeoSpark.stopPublishing();
+    }
+
+    @ReactMethod
     public static void enableAccuracyEngine() {
         GeoSpark.enableAccuracyEngine();
     }
