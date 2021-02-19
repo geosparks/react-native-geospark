@@ -17,6 +17,38 @@ import java.util.List;
 
 class RNGeoSparkUtils {
 
+    public static final String APP_ID = "APP_ID";
+    public static final String USER_ID = "USER_ID";
+    public static final String GEOFENCE_EVENTS = "GEOFENCE_EVENTS";
+    public static final String LOCATION_EVENTS = "LOCATION_EVENTS";
+    public static final String NEARBY_EVENTS = "NEARBY_EVENTS";
+    public static final String TRIPS_EVENTS = "TRIPS_EVENTS";
+    public static final String LOCATION_LISTENER = "LOCATION_LISTENER";
+    public static final String EVENT_LISTENER = "EVENT_LISTENER";
+    public static final String ALTITUDE = "ALTITUDE";
+    public static final String COURSE = "COURSE";
+    public static final String SPEED = "SPEED";
+    public static final String VERTICAL_ACCURACY = "VERTICAL_ACCURACY";
+    public static final String HORIZONTAL_ACCURACY = "HORIZONTAL_ACCURACY";
+    public static final String APP_CONTEXT = "APP_CONTEXT";
+    public static final String ALLOW_MOCKED = "ALLOW_MOCKED";
+    public static final String BATTERY_REMAINING = "BATTERY_REMAINING";
+    public static final String BATTERY_SAVER = "BATTERY_SAVER";
+    public static final String BATTERY_STATUS = "BATTERY_STATUS";
+    public static final String ACTIVITY = "ACTIVITY";
+    public static final String AIRPLANE_MODE = "AIRPLANE_MODE";
+    public static final String DEVICE_MANUFACTURE = "DEVICE_MANUFACTURE";
+    public static final String DEVICE_MODEL = "DEVICE_MODEL";
+    public static final String TRACKING_MODE = "TRACKING_MODE";
+    public static final String LOCATIONPERMISSION = "LOCATIONPERMISSION";
+    public static final String NETWORK_STATUS = "NETWORK_STATUS";
+    public static final String GPS_STATUS = "GPS_STATUS";
+    public static final String OS_VERSION = "OS_VERSION";
+    public static final String RECORDERD_AT = "RECORDERD_AT";
+    public static final String TZ_OFFSET = "TZ_OFFSET";
+    public static final String METADATA = "METADATA";
+
+
     static String isGranted(boolean hasGranted) {
         if (hasGranted) {
             return "GRANTED";
@@ -189,4 +221,3 @@ class RNGeoSparkUtils {
         return map;
     }
 }
-

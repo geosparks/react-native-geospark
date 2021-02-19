@@ -7,9 +7,10 @@ if (!NativeModules.RNGeoSpark) {
 
 const eventEmitter = new NativeEventEmitter(NativeModules.RNGeoSpark);
 
+
 const TrackingMode = {
  ACTIVE : 'ACTIVE',
- REACTIVE : 'REACTIVE',
+ BALANCED : 'BALANCED',
  PASSIVE :'PASSIVE',
 }
 
@@ -41,6 +42,43 @@ const ActivityType = {
   FITNESS:'FITNESS',
 }
 
+const SubscribeListener = {
+ EVENTS : 'EVENTS',
+ LOCATION : 'LOCATION',
+ BOTH :'BOTH',
+}
+
+const Publish = {
+	APP_ID : 'APP_ID',
+  	USER_ID : 'USER_ID',
+	GEOFENCE_EVENTS :'GEOFENCE_EVENTS',
+	LOCATION_EVENTS :'LOCATION_EVENTS',
+	NEARBY_EVENTS :'NEARBY_EVENTS',
+ 	TRIPS_EVENTS :'TRIPS_EVENTS',
+  	LOCATION_LISTENER :'LOCATION_LISTENER',
+  	EVENT_LISTENER :'EVENT_LISTENER',
+	ALTITUDE :'ALTITUDE',
+ 	COURSE :'COURSE',
+ 	SPEED:'SPEED',
+ 	VERTICAL_ACCURACY :'VERTICAL_ACCURACY',
+  	HORIZONTAL_ACCURACY :'HORIZONTAL_ACCURACY',
+ 	APP_CONTEXT :'APP_CONTEXT',
+ 	ALLOW_MOCKED :'ALLOW_MOCKED',
+	BATTERY_REMAINING :'BATTERY_REMAINING',
+	BATTERY_SAVER :'BATTERY_SAVER',
+	BATTERY_STATUS :'BATTERY_STATUS',
+	ACTIVITY :'ACTIVITY',
+	AIRPLANE_MODE :'AIRPLANE_MODE',
+	DEVICE_MANUFACTURE :'DEVICE_MANUFACTURE',
+	DEVICE_MODEL :'DEVICE_MODEL',
+	TRACKING_MODE :'TRACKING_MODE',
+	LOCATIONPERMISSION :'LOCATIONPERMISSION',
+	NETWORK_STATUS :'NETWORK_STATUS',
+	GPS_STATUS :'GPS_STATUS',
+ 	OS_VERSION :'OS_VERSION',
+	RECORDERD_AT :'RECORDERD_AT',
+  TZ_OFFSET :'TZ_OFFSET',
+ }
 
 const createUser = (description,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.createUser(description,successCallback,errorCallback);
@@ -70,28 +108,12 @@ const getListenerStatus = (successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.getListenerStatus(successCallback,errorCallback);
 };
 
-const subscribeEvents = () => {
-  NativeModules.RNGeoSpark.subscribeEvents();
+const subscribe = (type,userid) => {
+  NativeModules.RNGeoSpark.subscribe(type,userid);
 };
 
-const unSubscribeEvents = () => {
-  NativeModules.RNGeoSpark.unSubscribeEvents();
-};
-
-const subscribeLocation = () => {
-  NativeModules.RNGeoSpark.subscribeLocation();
-};
-
-const unSubscribeLocation = () => {
-  NativeModules.RNGeoSpark.unSubscribeLocation();
-};
-
-const subscribeUserLocation = (userId) => {
-  NativeModules.RNGeoSpark.subscribeUserLocation(userId);
-};
-
-const unSubscribeUserLocation = (userId) => {
-  NativeModules.RNGeoSpark.unSubscribeUserLocation(userId);
+const unSubscribe = (type,userid) => {
+  NativeModules.RNGeoSpark.unSubscribe(type,userid);
 };
 
 const subscribeTripStatus = (tripId) => {
@@ -174,6 +196,18 @@ const activeTrips = (offline,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.activeTrips(offline,successCallback,errorCallback);
 };
 
+const publishOnly = (array,jsonMetadata) => {
+  NativeModules.RNGeoSpark.publishOnly(array,jsonMetadata);
+};
+
+const publishAndSave = (jsonMetadata) => {
+  NativeModules.RNGeoSpark.publishAndSave(jsonMetadata);
+};
+
+const stopPublishing = () => {
+  NativeModules.RNGeoSpark.stopPublishing();
+};
+
 const startTracking = (trackingMode) => {
   NativeModules.RNGeoSpark.startTracking(trackingMode);
 };
@@ -206,6 +240,10 @@ const allowMockLocation = (enabled) => {
   NativeModules.RNGeoSpark.allowMockLocation(enabled);
 };
 
+const getCurrentLocationListener = (accuracy) => {
+	NativeModules.RNGeoSpark.getCurrentLocationListener(accuracy);
+}
+
 const getCurrentLocation = (desiredAccuracy,accuracy,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.getCurrentLocation(desiredAccuracy,accuracy,successCallback,errorCallback);
 };
@@ -232,10 +270,6 @@ const setTrackingInAppState = (appState) =>{
 
 const offlineLocationTracking = (enabled) => {
   NativeModules.RNGeoSpark.offlineLocationTracking(enabled);
-}
-
-const locationPublisher = (enabled) => {
-  NativeModules.RNGeoSpark.locationPublisher(enabled);
 }
 
 const startSelfTracking = (trackingMode) => {
@@ -280,6 +314,8 @@ DesiredAccuracy,
 AppState,
 DesiredAccuracyIOS,
 ActivityType,
+SubscribeListener,
+Publish,
 createUser,
 getUser,
 setDescription,
@@ -287,12 +323,8 @@ toggleEvents,
 toggleListener,
 getEventsStatus,
 getListenerStatus,
-subscribeEvents,
-unSubscribeEvents,
-subscribeLocation,
-unSubscribeLocation,
-subscribeUserLocation,
-unSubscribeUserLocation,
+subscribe,
+unSubscribe,
 subscribeTripStatus,
 unSubscribeTripStatus,
 disableBatteryOptimization,
@@ -313,6 +345,9 @@ forceStopTrip,
 deleteTrip,
 syncTrip,
 activeTrips,
+publishOnly,
+publishAndSave,
+stopPublishing,
 startTracking,
 startTrackingCustom,
 startSelfTrackingCustom,
@@ -321,6 +356,7 @@ startTrackingDistanceInterval,
 stopTracking,
 isLocationTracking,
 allowMockLocation,
+getCurrentLocationListener,
 getCurrentLocation,
 updateCurrentLocation,
 getCurrentLocationIos,
@@ -328,7 +364,6 @@ updateCurrentLocationIos,
 logout,
 setTrackingInAppState,
 offlineLocationTracking,
-locationPublisher,
 startSelfTracking,
 startSelfTrackingTimeInterval,
 startSelfTrackingDistanceInterval,
