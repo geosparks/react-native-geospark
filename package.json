@@ -1,9 +1,9 @@
 {
-  "name": "react-native-geospark-test",
+  "name": "react-native-geospark",
   "description": "React Native module for GeoSpark, the location intelligence platform.",
   "homepage": "https://geospark.co",
   "license": "Apache-2.0",
-  "version": "3.1.2",
+  "version": "3.1.1",
   "main": "js/index.js",
   "dependencies": {},
   "peerDependencies": {
