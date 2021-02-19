@@ -1,6 +1,7 @@
 package com.geospark.reactnative;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -49,14 +50,22 @@ public class RNGeoSparkReceiver extends GeoSparkReceiver {
         ReactApplication reactApplication = (ReactApplication) context.getApplicationContext();
         mReactNativeHost = reactApplication.getReactNativeHost();
         WritableMap map = Arguments.createMap();
-        map.putString("userId", geoSparkLocation.getUserId());
+        if (TextUtils.isEmpty(geoSparkLocation.getUserId())) {
+            map.putString("userId", " ");
+        } else {
+            map.putString("userId", geoSparkLocation.getUserId());
+        }
         map.putMap("location", RNGeoSparkUtils.mapForLocation(geoSparkLocation.getLocation()));
-        map.putString("activity", geoSparkLocation.getActivity());
+        if (TextUtils.isEmpty(geoSparkLocation.getActivity())) {
+            map.putString("activity", " ");
+        } else {
+            map.putString("activity", geoSparkLocation.getActivity());
+        }
         map.putString("recordedAt", geoSparkLocation.getRecordedAt());
         map.putString("timezone", geoSparkLocation.getTimezoneOffset());
         sendEvent("location", map);
     }
-    
+
     @Override
     public void onLocationReceived(Context context, GeoSparkLocationReceived geoSparkLocationReceived) {
         super.onLocationReceived(context, geoSparkLocationReceived);

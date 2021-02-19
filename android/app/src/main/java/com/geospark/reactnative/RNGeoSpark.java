@@ -74,7 +74,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void setDescription(String description) {
+    public void setDescription(String description) {
         GeoSpark.setDescription(description);
     }
 
@@ -139,7 +139,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void subscribe(String type, String userId) {
+    public void subscribe(String type, String userId) {
         switch (type) {
             case "EVENTS":
                 GeoSpark.subscribe(GeoSpark.Subscribe.EVENTS, userId);
@@ -154,7 +154,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void unSubscribe(String type, String userId) {
+    public void unSubscribe(String type, String userId) {
         switch (type) {
             case "EVENTS":
                 GeoSpark.unSubscribe(GeoSpark.Subscribe.EVENTS, userId);
@@ -169,12 +169,12 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void subscribeTripStatus(String tripId) {
+    public void subscribeTripStatus(String tripId) {
         GeoSpark.subscribeTripStatus(tripId);
     }
 
     @ReactMethod
-    public static void unSubscribeTripStatus(String tripId) {
+    public void unSubscribeTripStatus(String tripId) {
         GeoSpark.unSubscribeTripStatus(tripId);
     }
 
@@ -287,8 +287,13 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void allowMockLocation(boolean value) {
+    public void allowMockLocation(boolean value) {
         GeoSpark.allowMockLocation(value);
+    }
+
+    @ReactMethod
+    public void getCurrentLocationListener(int accuracy) {
+        GeoSpark.getCurrentLocation(accuracy);
     }
 
     @ReactMethod
@@ -424,7 +429,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void createTrip(boolean offline, final Callback successCallback, final Callback errorCallback) {
+    public void createTrip(boolean offline, final Callback successCallback, final Callback errorCallback) {
         GeoSpark.createTrip(null, null, offline, new GeoSparkCreateTripCallback() {
             @Override
             public void onSuccess(GeoSparkCreateTrip geoSparkCreateTrip) {
@@ -439,7 +444,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void deleteTrip(String tripId, final Callback successCallback, final Callback errorCallback) {
+    public void deleteTrip(String tripId, final Callback successCallback, final Callback errorCallback) {
         GeoSpark.deleteTrip(tripId, new GeoSparkDeleteTripCallback() {
             @Override
             public void onSuccess(String msg) {
@@ -456,7 +461,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void syncTrip(String tripId, final Callback successCallback, final Callback errorCallback) {
+    public void syncTrip(String tripId, final Callback successCallback, final Callback errorCallback) {
         GeoSpark.syncTrip(tripId, new GeoSparkSyncTripCallback() {
             @Override
             public void onSuccess(String msg) {
@@ -527,12 +532,12 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void offlineLocationTracking(boolean value) {
+    public void offlineLocationTracking(boolean value) {
         GeoSpark.offlineLocationTracking(value);
     }
 
     @ReactMethod
-    public static void publishAndSave(ReadableMap readableMap) {
+    public void publishAndSave(ReadableMap readableMap) {
         GeoSparkPublish.Builder geoSparkPublish = new GeoSparkPublish.Builder();
         if (readableMap != null && readableMap.getMap(RNGeoSparkUtils.METADATA) != null) {
             try {
@@ -549,7 +554,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void publishOnly(ReadableArray readableArray, ReadableMap readableMap) {
+    public void publishOnly(ReadableArray readableArray, ReadableMap readableMap) {
         GeoSparkPublish.Builder geoSparkPublish = new GeoSparkPublish.Builder();
         if (readableArray != null && readableArray.size() > 0) {
             for (int i = 0; i < readableArray.size(); i++) {
@@ -693,12 +698,17 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void enableAccuracyEngine() {
+    public void stopPublishing() {
+        GeoSpark.stopPublishing();
+    }
+
+    @ReactMethod
+    public void enableAccuracyEngine() {
         GeoSpark.enableAccuracyEngine();
     }
 
     @ReactMethod
-    public static void disableAccuracyEngine() {
+    public void disableAccuracyEngine() {
         GeoSpark.disableAccuracyEngine();
     }
 
@@ -752,7 +762,7 @@ public class RNGeoSpark extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void stopSelfTracking() {
+    public void stopSelfTracking() {
         GeoSpark.stopSelfTracking();
     }
 }

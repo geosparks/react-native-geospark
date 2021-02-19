@@ -204,6 +204,10 @@ const publishAndSave = (jsonMetadata) => {
   NativeModules.RNGeoSpark.publishAndSave(jsonMetadata);
 };
 
+const stopPublishing = () => {
+  NativeModules.RNGeoSpark.stopPublishing();
+};
+
 const startTracking = (trackingMode) => {
   NativeModules.RNGeoSpark.startTracking(trackingMode);
 };
@@ -235,6 +239,10 @@ const isLocationTracking = (callback) => {
 const allowMockLocation = (enabled) => {
   NativeModules.RNGeoSpark.allowMockLocation(enabled);
 };
+
+const getCurrentLocationListener = (accuracy) => {
+	NativeModules.RNGeoSpark.getCurrentLocationListener(accuracy);
+}
 
 const getCurrentLocation = (desiredAccuracy,accuracy,successCallback,errorCallback) => {
   NativeModules.RNGeoSpark.getCurrentLocation(desiredAccuracy,accuracy,successCallback,errorCallback);
@@ -339,6 +347,7 @@ syncTrip,
 activeTrips,
 publishOnly,
 publishAndSave,
+stopPublishing,
 startTracking,
 startTrackingCustom,
 startSelfTrackingCustom,
@@ -347,6 +356,7 @@ startTrackingDistanceInterval,
 stopTracking,
 isLocationTracking,
 allowMockLocation,
+getCurrentLocationListener,
 getCurrentLocation,
 updateCurrentLocation,
 getCurrentLocationIos,

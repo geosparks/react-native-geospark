@@ -445,6 +445,11 @@ RCT_EXPORT_METHOD(publishOnly:(NSArray *)array metaData:(NSDictionary *)metaData
   });
 }
 
+RCT_EXPORT_METHOD(stopPublishing){
+  [GeoSpark stopPublishing];
+}
+
+
 
 - (NSMutableDictionary *) userData:(GeoSparkUser *)user{
   NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
